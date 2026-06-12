@@ -28,10 +28,22 @@ behaviour, proven by the same shared test vectors.
 Every change must pass, and you must report the real result:
 
 ```bash
-dart pub get && dart analyze && dart test
+tool/verify.sh            # pub get + analyze (--fatal-infos) + every package's tests
+tool/verify.sh --coverage # also emit packages/didwebvh_core/coverage/lcov.info
 ```
 
-Coverage ≥ 80% on `didwebvh_core` (`signing_local` and `wizard` are excluded).
+This is the Dart analog of Java's `./mvnw clean verify`. Coverage ≥ 80% on `didwebvh_core`
+(`signing_local` and `wizard` are excluded).
+
+The gate also runs automatically on every commit via the tracked pre-commit hook in
+[`.githooks/`](.githooks/). Enable it once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+A commit is blocked unless `tool/verify.sh` reports `VERIFY OK`. Use `git commit --no-verify`
+only to bypass it deliberately.
 
 ## Commits and review
 

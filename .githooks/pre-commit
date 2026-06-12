@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# pre-commit — runs the workspace quality gate before every commit.
+#
+# The git analog of the Java project tying its checks to `./mvnw clean verify`:
+# nothing lands without `tool/verify.sh` going green (pub get + analyze + tests).
+#
+# This hook lives in the tracked .githooks/ directory. Enable it once per clone:
+#
+#   git config core.hooksPath .githooks
+#
+# To skip the gate for a single commit (e.g. a docs-only WIP), use:
+#
+#   git commit --no-verify
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+exec "$ROOT/tool/verify.sh"
