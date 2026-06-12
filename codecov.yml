@@ -1,0 +1,32 @@
+# Codecov configuration for didwebvh-dart (ported from didwebvh-java).
+# See: https://docs.codecov.com/docs/codecov-yaml
+
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+
+  precision: 2
+  round: down
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: true
+
+# Wizard and signing-local are thin adapters; the core package carries the
+# coverage contract (mirrors the Java project).
+ignore:
+  - "**/.dart_tool/**"
+  - "**/test/**"
+  - "packages/didwebvh_wizard/**"
+  - "packages/didwebvh_signing_local/**"

@@ -59,8 +59,12 @@ Read as little as possible. Do NOT read the whole docs tree.
    never edit them; make the Dart code match them.
 
 9. Run the gate and report the REAL result (pass or fail, with output):
-       dart pub get && dart analyze && dart test
-   Gather coverage for didwebvh_core when the iteration touches covered code.
+       tool/verify.sh
+   This one script (the analog of Java's ./mvnw clean verify) runs dart pub get,
+   workspace dart analyze --fatal-infos, and dart test for every package with a
+   test/ dir; it prints VERIFY OK / VERIFY FAILED. Run it after ANY change — it is
+   the center of "nothing is broken". Use `tool/verify.sh --coverage` to gather
+   coverage for didwebvh_core when the iteration touches covered code.
 
 10. Update CHANGELOG.md [Unreleased]. Add brief Implementation Notes to the iteration's
     detail file. Leave the box at [~]; the HUMAN flips [~] -> [x], commits, and adds a

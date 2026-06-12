@@ -38,20 +38,28 @@ The agent prompt checks for this folder before doing any work.
 
 ## The verification gate
 
-Every iteration must pass, and you must report the **real** result (including failures, with output):
+Every iteration — and **every change, however small** — must pass the one-shot gate, and you must report the
+**real** result (including failures, with output):
 
 ```bash
-dart pub get
-dart analyze            # zero issues; very_good_analysis is the rule set
-dart test               # all tests green, including the shared vectors
+tool/verify.sh          # the center of "nothing is broken" — run this after any change
 ```
 
-For `didwebvh_core`, collect coverage when the iteration touches covered code:
+This is the Dart analog of Java's `./mvnw clean verify`. It runs, in order:
+
+- `dart pub get` (resolves the whole pub workspace),
+- `dart analyze --fatal-infos` (zero issues; `very_good_analysis` is the rule set),
+- `dart test` for **every** package that has a `test/` dir (all tests green, including the shared vectors).
+
+It prints `VERIFY OK` on success or `VERIFY FAILED` (non-zero exit) on the first failing suite. Because
+`dart test` is per-package in a pub workspace (running it from the root only prints help), always use the
+script rather than hand-rolling the commands — that way any new `test/` folder is automatically included.
+
+For `didwebvh_core`, collect coverage when the iteration touches covered code by adding `--coverage`; it writes
+`packages/didwebvh_core/coverage/lcov.info`:
 
 ```bash
-dart test --coverage=coverage
-dart pub global run coverage:format_coverage \
-  --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+tool/verify.sh --coverage
 ```
 
 The 80% Codecov gate applies to `didwebvh_core` only; `didwebvh_signing_local` and `didwebvh_wizard` are thin

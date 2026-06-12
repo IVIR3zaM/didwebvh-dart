@@ -1,0 +1,15 @@
+# Pub workspace root for didwebvh-dart (Dart 3.6+ workspaces).
+# A faithful port of didwebvh-java; see docs/PORTING-DECISIONS.md §3–§4.
+name: _didwebvh_workspace
+publish_to: none
+
+environment:
+  sdk: '^3.6.0'
+
+workspace:
+  - packages/didwebvh_core
+  - packages/didwebvh_signing_local
+  - packages/didwebvh_wizard
+
+dev_dependencies:
+  very_good_analysis: ^7.0.0

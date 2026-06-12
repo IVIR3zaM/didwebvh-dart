@@ -1,0 +1,23 @@
+name: didwebvh_core
+description: >-
+  Spec-aligned did:webvh v1.0 core: log entries, JCS/multihash/multikey
+  primitives, SCID & entry-hash generation, signing, creation, resolution and
+  validation. A faithful Dart port of didwebvh-java's didwebvh-core module.
+version: 0.1.0
+repository: https://github.com/IVIR3zaM/didwebvh-dart
+publish_to: none
+
+environment:
+  sdk: '^3.6.0'
+
+resolution: workspace
+
+dependencies:
+  crypto: ^3.0.0
+  cryptography: ^2.7.0
+  http: ^1.2.0
+
+dev_dependencies:
+  mocktail: ^1.0.0
+  test: ^1.25.0
+  very_good_analysis: ^7.0.0

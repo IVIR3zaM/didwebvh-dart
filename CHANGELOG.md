@@ -14,3 +14,13 @@ All notable changes to this project are documented here. The format is based on
 - Repository seed: porting docs (`docs/AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/PORTING-DECISIONS.md`,
   `docs/PORTING-GUIDE.md`, `docs/PORTING-STATUS.md` + `docs/iterations/`), `PROMPT.md`, and the Java-reference setup
   (`reference/README.md`).
+- Iteration 0 — repository scaffolding: pub-workspace root `pubspec.yaml` (`workspace:` list, `sdk: '^3.6.0'`),
+  the three packages `didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard` (each with its own `pubspec.yaml`,
+  public barrel, and `lib/src/` tree per decisions §4), `analysis_options.yaml` (`very_good_analysis`),
+  `codecov.yml` (80% project + patch, gate scoped to `didwebvh_core`), and the
+  `.github/workflows/ci.yml` (Dart SDK matrix `3.6.0` / `stable` / `beta`) and `publish.yml` (tag-triggered
+  pub.dev OIDC) workflows.
+- `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
+  for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
+  `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical
+  end-of-change gate in the agent docs (`docs/AGENTS.md`, `docs/PORTING-GUIDE.md`, `PROMPT.md`).
