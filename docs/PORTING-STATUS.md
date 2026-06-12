@@ -12,7 +12,7 @@ the shared test vectors are the cross-language contract. Status flow: `[ ]` not 
 |-----|---|-----------|--------|
 | [x] | 0 | Repository scaffolding (pub workspace, CI, lint, codecov) | [iterations/00-scaffolding.md](iterations/00-scaffolding.md) |
 | [x] | 1 | Vendor shared test vectors & spec | [iterations/01-test-vectors.md](iterations/01-test-vectors.md) |
-| [ ] | 2 | Crypto primitives (JCS, multihash, base58btc, multikey) | [iterations/02-crypto-primitives.md](iterations/02-crypto-primitives.md) |
+| [x] | 2 | Crypto primitives (JCS, multihash, base58btc, multikey) | [iterations/02-crypto-primitives.md](iterations/02-crypto-primitives.md) |
 | [ ] | 3 | Model classes + exceptions | [iterations/03-model.md](iterations/03-model.md) |
 | [ ] | 4 | Signing — async `Signer`, proof gen/verify | [iterations/04-signing.md](iterations/04-signing.md) |
 | [ ] | 5 | SCID, entry-hash & pre-rotation generators | [iterations/05-scid-entryhash-prerotation.md](iterations/05-scid-entryhash-prerotation.md) |

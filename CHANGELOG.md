@@ -25,6 +25,20 @@ All notable changes to this project are documented here. The format is based on
   (`didwebvh-core/src/test/resources/`) into `packages/didwebvh_core/test/vectors/`. These bytes are the
   cross-implementation interop contract and are never edited. Added a `TestVectors` load helper
   (`test/support/test_vectors.dart`, mirroring Java's `TestVectors.readResource`) and a presence/loadability test.
+- Iteration 2 — crypto primitives (`packages/didwebvh_core/lib/src/crypto/`), the byte-exact foundations of the
+  method, ported from the Java `crypto/` package:
+  - `jcs.dart` (`Jcs`) — RFC 8785 JSON Canonicalization Scheme. The Java side delegates to erdtman's
+    `JsonCanonicalizer`; reimplemented here as recursive UTF-16-code-unit key sorting, ECMAScript
+    `Number::toString` serialization (RFC 8785 §3.2.2.3), minimal string escaping, and UTF-8 output. Gated on
+    RFC 8785 number vectors (integer, fraction, and exponential boundaries) plus the ported Java `JcsTest` cases.
+  - `multihash.dart` (`MultihashUtil`) — `sha2-256` (`0x12`) multihash encode/extract.
+  - `base58btc.dart` (`Base58Btc`) — base58 (Bitcoin alphabet) with multibase `z`-prefix framing; the bitcoinj
+    leading-zero algorithm reimplemented to avoid a dependency (decisions §2). Byte-exactness cross-checked by
+    decoding/re-encoding a real multikey from the interop vectors.
+  - `multikey.dart` (`MultikeyUtil`) — W3C Multikey for Ed25519 (codec `0xed01`).
+  - `core/exceptions.dart` — minimal `DidWebVhException` / `ValidationException` (the crypto utilities throw
+    `ValidationException`); the full hierarchy lands in iteration 3. These stay package-private under `lib/src/`;
+    the public barrel is unchanged.
 - `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
   for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
   `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical
