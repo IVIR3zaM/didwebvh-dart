@@ -55,6 +55,23 @@ All notable changes to this project are documented here. The format is based on
     equality/hash helpers replace Gson: hand-written `toJson({omitNull})` reproduces Java's null-preserving
     (`serializeNulls`) vs null-omitting (compact) serialization precisely (decisions §2). The public barrel now
     re-exports the model + exception API.
+- Iteration 4 — signing (`packages/didwebvh_core/lib/src/signing/`), ported from the Java `signing/` package:
+  - `signer.dart` (`Signer`) — the signing abstraction. Per the documented architectural delta (decisions §4),
+    `sign` is **async** (`Future<Uint8List> sign(Uint8List)`) instead of Java's synchronous `byte[] sign(byte[])`,
+    so the one interface can back local keys, remote KMS, or HSM signers.
+  - `proof_generator.dart` (`ProofGenerator`) — builds `eddsa-jcs-2022` proofs: canonicalizes the entry without
+    its `proof`, signs `SHA256(JCS(proofConfig)) || SHA256(JCS(document))`, and base58btc-multibase-encodes the
+    signature. `generate` is `async` (the signer ripple); `buildHashData` stays synchronous, matching Java.
+    The `created` timestamp uses the reference's `yyyy-MM-dd'T'HH:mm:ss'Z'` UTC format (seconds precision).
+  - `proof_verifier.dart` (`ProofVerifier`) — verifies proofs, plus `isAuthorized` and `extractMultikey`. Java's
+    two `verify` overloads (`LogEntry` / `JsonObject`) map to `verify` and `verifyDocument`. **Deviation from
+    decisions §2/§4 / risk #4:** that document specified *synchronous* verification via `cryptography`'s
+    `DartEd25519`, but `DartEd25519.verify` is async-only (no public sync entry point); verification therefore
+    returns `Future<bool>`. No new dependency was added. This ripples into the iteration 8 validation loop.
+  - The public barrel re-exports `Signer`, `ProofGenerator`, `ProofVerifier`. Tests port the Java
+    `ProofGeneratorTest` / `ProofVerifierTest` (generate→verify round-trip, tamper detection, `isAuthorized`,
+    `extractMultikey`) and add a vector test that verifies **every** proof in all 13 vendored interop `did.jsonl`
+    files — the cross-language byte-exactness contract for JCS + multihash + eddsa-jcs-2022.
 - `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
   for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
   `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical

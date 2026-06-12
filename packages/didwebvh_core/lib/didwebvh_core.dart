@@ -15,5 +15,8 @@ export 'src/model/parameters.dart';
 export 'src/model/resolution_metadata.dart';
 export 'src/model/resolve_result.dart';
 export 'src/model/version_id.dart';
+export 'src/signing/proof_generator.dart';
+export 'src/signing/proof_verifier.dart';
+export 'src/signing/signer.dart';
 export 'src/witness/witness_config.dart';
 export 'src/witness/witness_entry.dart';

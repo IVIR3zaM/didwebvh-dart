@@ -37,16 +37,19 @@ is at `docs/spec/Webvh v1.0.txt`.
 
 - **Build/monorepo:** pub workspaces (Dart 3.6+), no Melos. Root `pubspec.yaml` with `workspace:` list.
 - **Packages:** `didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard`.
-- **Crypto:** `cryptography` (Ed25519; async for the signer, sync `DartEd25519` for in-core verification),
-  `crypto` (SHA-256). JCS, multihash, base58btc, multikey are **ported internally** (byte-exact).
+- **Crypto:** `cryptography` (Ed25519; `DartEd25519` for in-core verification — its `verify` is async-only, so
+  proof verification returns `Future<bool>`), `crypto` (SHA-256). JCS, multihash, base58btc, multikey are
+  **ported internally** (byte-exact).
 - **Do NOT use** the pub.dev `canonical_json` package — it is OLPC, not RFC 8785, and breaks interop.
 - **JSON:** `dart:convert` + hand-written `toJson`/`fromJson`; precise null-omit control for canonical lines.
   No codegen / `build_runner`.
 - **HTTP:** `package:http` behind a `RemoteDidFetcher` (10s timeout, 200KB cap, as in Java).
 - **CLI:** `package:args` (`CommandRunner`); `WizardIo` abstraction for testable prompts.
 - **Tests:** `package:test` + `mocktail` + `http`'s `MockClient`. Lint: `very_good_analysis`.
-- **The one intentional delta from Java:** the `Signer` is **async** (`Future<Uint8List> sign(...)`), which
-  ripples into `Future`-returning create/update operations. Proof *verification* stays synchronous.
+- **The intentional delta from Java:** the `Signer` is **async** (`Future<Uint8List> sign(...)`), which ripples
+  into `Future`-returning create/update operations. Proof *verification* is **also async** (`Future<bool>`) — not
+  by design but because `cryptography`'s `DartEd25519.verify` is async-only (see PORTING-DECISIONS.md §2,
+  corrected in iteration 4); this in turn makes the log-chain validation loop async.
 
 ### The `Signer` interface (async)
 

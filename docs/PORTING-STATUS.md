@@ -14,7 +14,7 @@ the shared test vectors are the cross-language contract. Status flow: `[ ]` not 
 | [x] | 1 | Vendor shared test vectors & spec | [iterations/01-test-vectors.md](iterations/01-test-vectors.md) |
 | [x] | 2 | Crypto primitives (JCS, multihash, base58btc, multikey) | [iterations/02-crypto-primitives.md](iterations/02-crypto-primitives.md) |
 | [x] | 3 | Model classes + exceptions | [iterations/03-model.md](iterations/03-model.md) |
-| [ ] | 4 | Signing — async `Signer`, proof gen/verify | [iterations/04-signing.md](iterations/04-signing.md) |
+| [x] | 4 | Signing — async `Signer`, proof gen/verify | [iterations/04-signing.md](iterations/04-signing.md) |
 | [ ] | 5 | SCID, entry-hash & pre-rotation generators | [iterations/05-scid-entryhash-prerotation.md](iterations/05-scid-entryhash-prerotation.md) |
 | [ ] | 6 | DID creation | [iterations/06-create.md](iterations/06-create.md) |
 | [ ] | 7 | DID URL parsing & DID-to-HTTPS | [iterations/07-url.md](iterations/07-url.md) |

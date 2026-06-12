@@ -6,7 +6,8 @@
 > breakdown are **language-neutral** and define the behaviour the Dart port must reproduce exactly.
 >
 > For how each Java module/class maps to a Dart package/library, the dependency substitutions, and the
-> one intentional delta (the **async `Signer`**), read [`PORTING-DECISIONS.md`](PORTING-DECISIONS.md).
+> async deltas (the intentional **async `Signer`**, plus async proof verification forced by `cryptography`'s
+> async-only `DartEd25519`), read [`PORTING-DECISIONS.md`](PORTING-DECISIONS.md).
 > Where Java specifics appear below (Maven, BouncyCastle, Gson, picocli), substitute the Dart equivalent
 > from the decisions table. The Dart package layout lives in `PORTING-DECISIONS.md` §4.
 

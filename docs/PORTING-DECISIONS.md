@@ -47,7 +47,7 @@ stance ("don't add a library for a 20-line task," and JCS has no maintained Dart
 | Concern | Java (current) | Dart decision | Rationale |
 |---|---|---|---|
 | **JCS / RFC 8785** | erdtman java-json-canonicalization | **Port internally** (`lib/src/crypto/jcs.dart`) | No pub.dev equivalent; must be byte-exact. See §1. |
-| **Ed25519 sign/verify** | BouncyCastle `bcprov-jdk15on` | [`cryptography`](https://pub.dev/packages/cryptography) (`Ed25519`, async) for the **local signer**; verification in core via `cryptography`'s `DartEd25519` (sync) | `cryptography` is the de-facto, cross-platform, actively maintained choice. Async fits the chosen async `Signer`. For in-core proof *verification* (always local, perf-sensitive in log validation) use the synchronous `DartEd25519`. Avoid `ed25519_edwards` since we chose the async API. |
+| **Ed25519 sign/verify** | BouncyCastle `bcprov-jdk15on` | [`cryptography`](https://pub.dev/packages/cryptography) (`Ed25519`, async) for the **local signer**; verification in core via `cryptography`'s `DartEd25519` (**async** — see correction below) | `cryptography` is the de-facto, cross-platform, actively maintained choice. Async fits the chosen async `Signer`. For in-core proof verification use `DartEd25519`. **Correction (iteration 4):** `DartEd25519.verify` is async-only — there is no public synchronous verify — so `ProofVerifier` returns `Future<bool>` and the log-validation loop is async. This was the *expected* tradeoff vs. adding `ed25519_edwards` for a sync path; we kept the single `cryptography` dependency. |
 | **SHA-256** | `java.security.MessageDigest` | [`crypto`](https://pub.dev/packages/crypto) (official Dart team) | Standard, ubiquitous. |
 | **Multihash** | java-multihash + custom `MultihashUtil` | **Port the tiny custom util** (`lib/src/crypto/multihash.dart`); SHA2-256 (`0x12`) only | Java already hand-rolls the varint prefix; mirror it. `dart_multihash` exists but the custom wrapper is ~30 lines and avoids a dep. |
 | **Base58btc / multibase** | novacrypto Base58 + custom `Base58Btc` | [`bs58`](https://pub.dev/packages/bs58) **or** port `Base58Btc` (~40 lines) | Lean toward a tiny internal port for the `z`-multibase framing to match Java 1:1; `bs58` acceptable if preferred. |
@@ -183,8 +183,11 @@ a direct, low-risk substitution.
    This is idiomatic Dart and was the user's explicit choice; document it as the one intentional architectural
    delta from the Java flow.
 3. **`canonical_json` foot-gun.** Explicitly documented as "do not use" so a future contributor doesn't grab it.
-4. **`cryptography` async-only for some ops.** Use `DartEd25519` (sync) for in-core verification to keep log
-   validation a simple synchronous loop; reserve the async `Ed25519` for the signer plugin.
+4. **`cryptography` async-only for some ops.** ~~Use `DartEd25519` (sync) for in-core verification to keep log
+   validation a simple synchronous loop; reserve the async `Ed25519` for the signer plugin.~~ **Corrected
+   (iteration 4):** `DartEd25519.verify` is async-only — no public synchronous verify exists — so `ProofVerifier`
+   returns `Future<bool>` and the log-validation loop is async. We kept the single `cryptography` dependency
+   rather than adding `ed25519_edwards` for a sync path.
 5. ~~**pub workspaces require Dart 3.6+ for development** while published packages can declare a lower SDK
    floor — keep these two constraints distinct in the pubspecs.~~ **Resolved (see §3):** pin `^3.6.0` on both
    the workspace and every package — a single constraint, matching Affinidi `ssi`. No split to track.
