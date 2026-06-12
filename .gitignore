@@ -1,0 +1,36 @@
+# Dart / Pub
+.dart_tool/
+.packages
+build/
+pubspec.lock        # libraries: keep lockfile out of VCS (app/wizard may override locally)
+doc/api/
+coverage/
+*.dart.js
+*.info.json
+*.js_
+*.js.deps
+*.js.map
+
+# Java reference (read-only; cloned locally, never committed)
+reference/didwebvh-java/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude / agents
+.claude/
+
+# Logs
+*.log
