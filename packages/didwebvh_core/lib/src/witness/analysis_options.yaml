@@ -1,0 +1,10 @@
+# Inherit the package (→ workspace) rule set.
+include: ../../../analysis_options.yaml
+
+linter:
+  rules:
+    # Ported witness DTOs (WitnessConfig, WitnessEntry): value types needing
+    # value equality, exempted here only — same rationale and scope as
+    # lib/src/model/analysis_options.yaml. Mirrors the Java reference's
+    # per-class config/spotbugs-exclude.xml suppression.
+    avoid_equals_and_hash_code_on_mutable_classes: false

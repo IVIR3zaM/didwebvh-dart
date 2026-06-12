@@ -1,0 +1,6 @@
+# Inherit the workspace-wide very_good_analysis rule set. Lint exemptions are
+# scoped narrowly to the model/witness DTO layer (see the analysis_options.yaml
+# under lib/src/model/ and lib/src/witness/) rather than disabled package-wide,
+# mirroring how the Java reference excludes only those classes in
+# config/spotbugs-exclude.xml.
+include: ../../analysis_options.yaml

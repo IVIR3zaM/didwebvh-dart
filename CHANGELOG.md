@@ -39,6 +39,22 @@ All notable changes to this project are documented here. The format is based on
   - `core/exceptions.dart` — minimal `DidWebVhException` / `ValidationException` (the crypto utilities throw
     `ValidationException`); the full hierarchy lands in iteration 3. These stay package-private under `lib/src/`;
     the public barrel is unchanged.
+- Iteration 3 — model classes + exceptions, ported from the Java `model/`, `witness/` and `core/` packages:
+  - `model/version_id.dart` (`VersionId`) — `"<number>-<hash>"` parsing plus the preliminary (SCID) form.
+  - `model/data_integrity_proof.dart` (`DataIntegrityProof`) — `eddsa-jcs-2022` proof bean with `defaults()`.
+  - `model/parameters.dart` (`Parameters`) — log-entry parameters (spec §3.7.1) with `defaults()` and `merge()`.
+  - `model/log_entry.dart` (`LogEntry`) — one JSONL line; `toJsonLine()` / `fromJsonLine()`.
+  - `model/did_document.dart` (`DidDocument`) — thin wrapper over a decoded JSON object.
+  - `model/resolution_metadata.dart` (`ResolutionMetadata`) and `model/resolve_result.dart` (`ResolveResult`).
+  - `witness/witness_config.dart` (`WitnessConfig`) + `witness/witness_entry.dart` (`WitnessEntry`) — the spec
+    `witness` parameter, serializing as `{}` when inactive (faithful to the Java `WitnessConfigTypeAdapter`).
+  - `core/exceptions.dart` — completed the hierarchy: `SigningException`, `UrlParseException`, and
+    `ResolutionException` (RFC 9457 problem details), alongside the existing `DidWebVhException` /
+    `ValidationException`.
+  - `model/json_support.dart` (`JsonModel` / `JsonSupport`) and the internal `model/json.dart` deep
+    equality/hash helpers replace Gson: hand-written `toJson({omitNull})` reproduces Java's null-preserving
+    (`serializeNulls`) vs null-omitting (compact) serialization precisely (decisions §2). The public barrel now
+    re-exports the model + exception API.
 - `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
   for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
   `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical

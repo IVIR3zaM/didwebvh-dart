@@ -5,3 +5,15 @@
 /// package-private (mirroring Java's package-private-by-default visibility).
 /// Public exports are added as each iteration lands (see docs/PORTING-STATUS.md).
 library;
+
+export 'src/core/exceptions.dart';
+export 'src/model/data_integrity_proof.dart';
+export 'src/model/did_document.dart';
+export 'src/model/json_support.dart' show JsonModel;
+export 'src/model/log_entry.dart';
+export 'src/model/parameters.dart';
+export 'src/model/resolution_metadata.dart';
+export 'src/model/resolve_result.dart';
+export 'src/model/version_id.dart';
+export 'src/witness/witness_config.dart';
+export 'src/witness/witness_entry.dart';
