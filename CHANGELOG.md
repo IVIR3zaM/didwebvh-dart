@@ -20,6 +20,11 @@ All notable changes to this project are documented here. The format is based on
   `codecov.yml` (80% project + patch, gate scoped to `didwebvh_core`), and the
   `.github/workflows/ci.yml` (Dart SDK matrix `3.6.0` / `stable` / `beta`) and `publish.yml` (tag-triggered
   pub.dev OIDC) workflows.
+- Iteration 1 — vendored the shared cross-language test vectors: the 26 files under
+  `test-vectors/` and `interop/` copied **verbatim** (byte-for-byte; SHA-256 verified) from the Java reference
+  (`didwebvh-core/src/test/resources/`) into `packages/didwebvh_core/test/vectors/`. These bytes are the
+  cross-implementation interop contract and are never edited. Added a `TestVectors` load helper
+  (`test/support/test_vectors.dart`, mirroring Java's `TestVectors.readResource`) and a presence/loadability test.
 - `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
   for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
   `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical
