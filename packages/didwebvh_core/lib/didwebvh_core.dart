@@ -7,6 +7,7 @@
 library;
 
 export 'src/core/did_webvh.dart';
+export 'src/core/did_webvh_state.dart';
 export 'src/core/exceptions.dart';
 export 'src/create/create_did_config.dart';
 export 'src/create/create_did_result.dart';
@@ -24,6 +25,10 @@ export 'src/resolve/resolve_options.dart';
 export 'src/signing/proof_generator.dart';
 export 'src/signing/proof_verifier.dart';
 export 'src/signing/signer.dart';
+export 'src/update/deactivate_did_config.dart';
+export 'src/update/migrate_did_config.dart';
+export 'src/update/update_did_config.dart';
+export 'src/update/update_did_result.dart';
 export 'src/url/did_to_https_transformer.dart';
 export 'src/url/did_webvh_url.dart';
 export 'src/validate/log_chain_validator.dart';

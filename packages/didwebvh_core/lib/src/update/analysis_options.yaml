@@ -1,0 +1,12 @@
+# Inherit the package (→ workspace) rule set.
+include: ../../../analysis_options.yaml
+
+linter:
+  rules:
+    # The update/migrate/deactivate configs are faithful ports of Java's fluent
+    # builders: each setter returns `this` for chaining. A future positional
+    # boolean setter (e.g. a portable/flag toggle) would also mirror its Java
+    # signature exactly. These two guards fight the builder idiom; exempted here
+    # only, same narrow scoping as lib/src/create/.
+    avoid_returning_this: false
+    avoid_positional_boolean_parameters: false

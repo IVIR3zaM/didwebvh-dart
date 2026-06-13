@@ -183,6 +183,29 @@ All notable changes to this project are documented here. The format is based on
     instead of OkHttp `MockWebServer`, per decisions §2), `LogProcessorTest`, and `DidResolverTest`, with a shared
     `resolve_test_support.dart`. The barrel re-exports `DidResolver`, `HttpDidFetcher`, `ResolveOptions`, and
     `WitnessFetchMode`.
+- Iteration 10 — update, migration & deactivation, ported from the Java `update/` package plus the
+  `DidWebVhState` holder (spec §3.6.3 update, §3.6.4 deactivation, §3.7.6 migration):
+  - `core/did_webvh_state.dart` (`DidWebVhState`) — the mutable DID state (log entries, witness proofs, active
+    parameters). `from`/`fromDidLog`/`fromJson` factory constructors, `toDidLog`/`toJson` serialization,
+    `appendEntry` (which also tracks the canonical DID from the latest entry's `id`), `accumulateParameters`,
+    `isDeactivated`, `lastEntry`, and an `async` `validate()` (the ripple from the async `LogChainValidator`).
+  - `update/update_did_operation.dart` (`UpdateDidOperation`) — builds and signs the next log entry: carries the
+    document forward (or replaces it), applies the parameter delta, advances `versionTime` (bumped one second past
+    the predecessor when the truncated clock has not moved), hashes against the predecessor `versionId`, and
+    attaches the `eddsa-jcs-2022` proof. The shared `buildEntry` underpins all three operations.
+  - `update/migrate_did_operation.dart` (`MigrateDidOperation`) — preserves the SCID, rewrites every DID reference
+    in the document to the new domain/path, and appends the old DID to `alsoKnownAs` (deduplicated); guarded by a
+    `portable: true` check.
+  - `update/deactivate_did_operation.dart` (`DeactivateDidOperation`) — emits the deactivation entry
+    (`deactivated=true`, `updateKeys=[]`); when pre-rotation is active it first emits an intermediate entry signed
+    by the revealed next key that clears `nextKeyHashes`, producing two entries.
+  - `update/{update,migrate,deactivate}_did_config.dart` + `update_did_result.dart` — fluent builders mirroring
+    `CreateDidConfig`'s three interchangeable call styles (fluent, cascade, named parameters), with the same
+    scoped `analysis_options.yaml` suppression (`avoid_returning_this`, `avoid_positional_boolean_parameters`).
+  - `DidWebVh` gains the `update`/`migrate`/`deactivate` facades; the barrel re-exports `DidWebVhState`, the three
+    configs, and `UpdateDidResult`. Tests port the Java `UpdateDidOperationTest` (22 cases) one-for-one, adapted to
+    the async signer and decoded-map documents, plus a dedicated `DidWebVhState` suite (7 cases) covering the
+    witness-proof `toJson`/`fromJson` round-trip and the remaining accessors (state file at 100% coverage).
 
 ### Changed
 - Pinned `very_good_analysis` to `^7.0.0` (down from `^10.2.0`). VGA `8.0.0+` requires Dart `>=3.7.0`, which broke
