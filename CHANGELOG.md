@@ -206,6 +206,15 @@ All notable changes to this project are documented here. The format is based on
     configs, and `UpdateDidResult`. Tests port the Java `UpdateDidOperationTest` (22 cases) one-for-one, adapted to
     the async signer and decoded-map documents, plus a dedicated `DidWebVhState` suite (7 cases) covering the
     witness-proof `toJson`/`fromJson` round-trip and the remaining accessors (state file at 100% coverage).
+- Iteration 11 — parallel `did:web` publishing, ported from the Java `didweb/` package (spec §3.7.10):
+  - `didweb/did_web_publisher.dart` (`DidWebPublisher`) — `toDidWeb` converts a resolved `did:webvh` DID Document
+    into the parallel `did:web` DID Document: deep-copies the input, adds the implicit services, text-replaces
+    `did:webvh:<scid>:` with `did:web:` across the serialized document, then adds the original `did:webvh` DID to
+    `alsoKnownAs` (deduplicated, removing the self `did:web` DID). `toDidWebUrl` delegates to
+    `DidToHttpsTransformer`. Throws `ValidationException` on a null document or missing id.
+  - Reuses the existing `didweb/implicit_services.dart` (`ImplicitServices`, landed in iteration 9 as a minimal
+    dependency); the barrel now re-exports both `DidWebPublisher` and `ImplicitServices`. Tests port the Java
+    `DidWebPublisherTest` (12 cases) one-for-one.
 
 ### Changed
 - Pinned `very_good_analysis` to `^7.0.0` (down from `^10.2.0`). VGA `8.0.0+` requires Dart `>=3.7.0`, which broke
