@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:didwebvh_core/didwebvh_core.dart';
 import 'package:didwebvh_core/src/crypto/entry_hash_generator.dart';
-import 'package:didwebvh_core/src/crypto/pre_rotation_hash_generator.dart';
 import 'package:didwebvh_core/src/crypto/scid_generator.dart';
 import 'package:test/test.dart';
 

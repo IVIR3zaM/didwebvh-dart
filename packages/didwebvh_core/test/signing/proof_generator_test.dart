@@ -1,5 +1,4 @@
 import 'package:didwebvh_core/didwebvh_core.dart';
-import 'package:didwebvh_core/src/crypto/base58btc.dart';
 import 'package:test/test.dart';
 
 import 'test_signer.dart';

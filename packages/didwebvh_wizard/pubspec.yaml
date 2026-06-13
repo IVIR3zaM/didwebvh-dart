@@ -18,6 +18,7 @@ dependencies:
     path: ../didwebvh_core
   didwebvh_signing_local:
     path: ../didwebvh_signing_local
+  path: ^1.9.0
 
 dev_dependencies:
   test: ^1.25.0

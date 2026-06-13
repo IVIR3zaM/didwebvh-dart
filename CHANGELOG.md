@@ -226,8 +226,39 @@ All notable changes to this project are documented here. The format is based on
     failures are wrapped in `SigningException`, matching Java. Tests port the Java `LocalKeySignerTest` plus a full
     create→sign→verify→resolve round-trip (the iteration's acceptance criterion). Excluded from the coverage gate
     (thin adapter, per decisions §5).
+- Iteration 13 — `didwebvh_wizard` package: interactive CLI wizard, ported from the Java `didwebvh-wizard`
+  module:
+  - `lib/src/wizard_io.dart` (`WizardIo`) + `lib/src/console_wizard_io.dart` (`ConsoleWizardIo`) — the testable
+    terminal-I/O seam (`readLine`/`println`/`printError`) backed by `stdin`/`stdout`/`stderr`.
+  - `lib/src/wizard_prompts.dart` (`WizardPrompts`), `lib/src/wizard_files.dart` (`WizardFiles`) and
+    `lib/src/wizard_exception.dart` (`WizardException`) — shared prompt helpers (`askRequired`/`askOptional`/
+    `askYesNo`/`askInt`/`askChoice`), the standard file names + read/write/append helpers, and the wizard's
+    runtime exception.
+  - `lib/src/create_wizard.dart` (`CreateWizard`), `lib/src/update_wizard.dart` (`UpdateWizard`),
+    `lib/src/resolve_wizard.dart` (`ResolveWizard`), `lib/src/export_did_web_wizard.dart` (`ExportDidWebWizard`)
+    — the four interactive flows (create / modify·migrate·deactivate / resolve over HTTPS or a local file /
+    export the parallel did:web document). All `run` methods are `async` (the documented async-`Signer` ripple,
+    decisions §4).
+  - `lib/src/wizard_witness_keys.dart` (`WizardWitnessKeys`) + `lib/src/wizard_witness_proofs.dart`
+    (`WizardWitnessProofs`) — the local witness key store (`witnesses/witness-<multikey>.json`) and witness-proof
+    collection that writes `did-witness.json` **before** `did.jsonl` (spec §3.7.8); a new witness list is
+    witnessed by the **prior** active list (spec §3.7.5).
+  - `lib/src/wizard_main.dart` (`WizardMain`) — the menu/action flow (`run(WizardIo)`); `bin/didwebvh_wizard.dart`
+    is the executable entry point (a single command with `--dir`/`--action` options and `--help`/`--version`
+    flags via `package:args`, mirroring the Java picocli command rather than a subcommand tree).
+  - New dependency `path` (`p.join`/`p.absolute`) supplies the path manipulation Java's `java.nio.file.Path`
+    provides. Tests port the Java `CreateWizardTest`, `UpdateWizardTest`, `ResolveWizardTest`,
+    `ExportDidWebWizardTest`, and `WizardMainTest` against a scripted `WizardIo` (`test/support/`); excluded from
+    the coverage gate (thin adapter, per decisions §5). The barrel re-exports the public wizard surface
+    (`WizardMain`, the four wizards, `WizardIo`, `ConsoleWizardIo`, `WizardException`); the helpers stay
+    package-private under `lib/src/`.
 
 ### Changed
+- `didwebvh_core` barrel now re-exports `Base58Btc` (`src/crypto/base58btc.dart`) and `PreRotationHashGenerator`
+  (`src/crypto/pre_rotation_hash_generator.dart`). Both are public cross-module API in Java (the wizard imports
+  `core.crypto.Base58Btc` and `core.crypto.PreRotationHashGenerator`); exposing them lets `didwebvh_wizard` build
+  the pre-rotation commitment hash and base58btc-encode witness signatures without an `implementation_imports`
+  violation. (Pre-existing core tests that imported those `src/` files directly were updated to use the barrel.)
 - `didwebvh_core` barrel now re-exports `MultikeyUtil` (`src/crypto/multikey.dart`). It is public cross-module API
   in Java (`didwebvh-signing-local` imports `core.crypto.MultikeyUtil`); exposing it lets `LocalKeySigner` and the
   in-test signer use it without an `implementation_imports` violation.

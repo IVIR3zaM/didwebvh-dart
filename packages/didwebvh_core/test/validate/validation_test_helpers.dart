@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:didwebvh_core/didwebvh_core.dart';
-import 'package:didwebvh_core/src/crypto/base58btc.dart';
 import 'package:didwebvh_core/src/crypto/entry_hash_generator.dart';
 
 import '../signing/test_signer.dart';

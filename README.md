@@ -260,9 +260,13 @@ Drop it into any `DidWebVh.create/update/migrate/deactivate` call — the librar
 
 ## Wizard CLI
 
+The wizard is **not published to pub.dev** — run it on demand from the package directory (no global
+install, nothing added to your `PATH`):
+
 ```bash
-dart pub global activate didwebvh_wizard   # or: dart run didwebvh_wizard from the repo
-didwebvh_wizard
+cd packages/didwebvh_wizard
+dart pub get          # first time only
+dart run              # launches the interactive menu (≡ dart run bin/didwebvh_wizard.dart)
 ```
 
 The wizard supports:
@@ -274,13 +278,15 @@ The wizard supports:
 4. **Export** the parallel `did:web` document (`did.json`) for the current DID
 5. Exit
 
-Single-shot mode (skip the menu):
+Single-shot mode (skip the menu). Name the entrypoint explicitly so the flags reach the wizard instead of
+`dart run` itself:
 
 ```bash
-didwebvh_wizard --action export --dir /srv/dids/alice
+dart run bin/didwebvh_wizard.dart --action export --dir /srv/dids/alice
 ```
 
-Valid `--action` values: `create`, `update`, `resolve`, `export`.
+Valid `--action` values: `create`, `update`, `resolve`, `export`. Use `--dir` to point at the directory holding
+`did.jsonl` (defaults to the current directory); `dart run bin/didwebvh_wizard.dart --help` lists every option.
 
 ## Building & testing
 

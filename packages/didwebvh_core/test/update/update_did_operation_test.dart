@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:didwebvh_core/didwebvh_core.dart';
-import 'package:didwebvh_core/src/crypto/pre_rotation_hash_generator.dart';
 import 'package:test/test.dart';
 
 import '../signing/test_signer.dart';
