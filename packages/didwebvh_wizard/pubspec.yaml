@@ -22,7 +22,7 @@ resolution: workspace
 
 dependencies:
   args: ^2.5.0
-  didwebvh: ^0.1.0-rc1
+  didwebvh: ^0.1.0
   didwebvh_signing_local: ^0.1.0
   path: ^1.9.0
 

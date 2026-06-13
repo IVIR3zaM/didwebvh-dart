@@ -20,7 +20,7 @@ resolution: workspace
 
 dependencies:
   cryptography: ^2.7.0
-  didwebvh: ^0.1.0-rc1
+  didwebvh: ^0.1.0
 
 dev_dependencies:
   test: ^1.25.0
