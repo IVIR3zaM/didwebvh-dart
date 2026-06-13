@@ -22,24 +22,13 @@ jobs:
         with:
           sdk: ${{ matrix.sdk }}
 
-      - name: Install dependencies
-        run: dart pub get
-
-      - name: Analyze
-        run: dart analyze --fatal-infos
-
-      - name: Test with coverage
-        run: dart test --coverage=coverage
-        working-directory: packages/didwebvh_core
-
-      - name: Format coverage to lcov
-        if: matrix.sdk == 'stable'
-        run: |
-          dart pub global activate coverage
-          dart pub global run coverage:format_coverage \
-            --lcov --in=coverage --out=coverage/lcov.info \
-            --report-on=lib --package=.
-        working-directory: packages/didwebvh_core
+      # Single source of truth with the local gate: pub get + workspace analyze
+      # + `dart test` for EVERY package with a test/ dir (core, signing_local,
+      # and the wizard once it has tests). `--coverage` (stable leg only) also
+      # writes packages/didwebvh_core/coverage/lcov.info; coverage stays scoped
+      # to didwebvh_core per codecov.yml, but all package tests run on every leg.
+      - name: Verify (analyze + all package tests + core coverage)
+        run: bash tool/verify.sh ${{ matrix.sdk == 'stable' && '--coverage' || '' }}
 
       - name: Upload coverage to Codecov
         if: matrix.sdk == 'stable'
