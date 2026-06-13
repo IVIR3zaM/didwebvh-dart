@@ -129,6 +129,30 @@ All notable changes to this project are documented here. The format is based on
   - New dependencies `punycode` and `unorm_dart` (decisions §2 update) supply the IDNA/Punycode and Unicode-NFC
     primitives Dart lacks in its core libraries. Tests port the Java `DidWebVhUrlTest` and
     `DidToHttpsTransformerTest` one-for-one. The barrel re-exports `DidWebVhUrl` and `DidToHttpsTransformer`.
+- Iteration 8 — log-chain validation & witness verification, ported from the Java `validate/` and `witness/`
+  packages (spec §3.6.2; pre-rotation §3.7.7; witness §3.7.5/§3.7.8):
+  - `validate/log_chain_validator.dart` (`LogChainValidator`) — the full spec §3.6.2 validation loop:
+    versionId/versionNumber checks, parameter merge + rule validation (first-entry `method`/`scid`/`updateKeys`,
+    no `scid` after the first entry, method-version non-decrease, `portable` not set true after the first entry,
+    witness-threshold bounds), SCID verification on the first entry, entry-hash verification, Data-Integrity proof
+    authorization + signature verification, `versionTime` monotonicity and not-in-future (60s skew), `state.id`
+    SCID-anchor portability check, key pre-rotation commitment matching, and deactivation termination. Per the
+    documented async-`Signer` delta, `validate` returns a `Future<ValidationResult>` (the loop `await`s
+    `ProofVerifier.verify`, which `package:cryptography` exposes only asynchronously) — the one observable
+    departure from Java's synchronous loop.
+  - `validate/witness_validator.dart` (`WitnessValidator`) — threshold witness verification (spec §3.7.8): verifies
+    each `did-witness.json` proof once over `{"versionId": "<vid>"}`, ignores proofs whose versionId is not in the
+    published log, and counts distinct authorized witnesses (accepting both `did:key:<mk>` and bare-multikey ids).
+    Enforces the §3.7.5 rule that a witness-list change must be witnessed by the **prior** list. Async for the same
+    reason as above.
+  - `validate/validation_result.dart` / `validate/witness_validation_result.dart` — the two result value types.
+  - `witness/witness_proof_collection.dart` (`WitnessProofCollection`) and `witness/witness_proof_entry.dart`
+    (`WitnessProofEntry`) — the `did-witness.json` model (a bare array of `{versionId, proof[]}` entries), with
+    hand-written `fromJson`/`toJson`. (`WitnessConfig`/`WitnessEntry` already landed in iteration 3.)
+  - Tests port the Java `LogChainValidatorTest`, `WitnessValidatorTest`, and `WitnessProofCollectionTest`, plus the
+    interop validator tests (`InteropJavaEeccLogsTest`, `InteropPreRotationConsumeTest`, `InteropTsBasicUpdateTest`,
+    `InteropEmptyWitnessObjectTest`, `InteropRustWitnessProofsTest`, `InteropNegativeCrossDidWitnessReplayTest`)
+    against the vendored vectors. The barrel re-exports the four `validate/` types and the two witness-proof types.
 
 ### Changed
 - `Jcs` — added `Jcs.canonicalizeValue(Object?)`, now the primary entry point: it canonicalizes an

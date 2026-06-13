@@ -18,7 +18,7 @@ the shared test vectors are the cross-language contract. Status flow: `[ ]` not 
 | [x] | 5 | SCID, entry-hash & pre-rotation generators | [iterations/05-scid-entryhash-prerotation.md](iterations/05-scid-entryhash-prerotation.md) |
 | [x] | 6 | DID creation | [iterations/06-create.md](iterations/06-create.md) |
 | [x] | 7 | DID URL parsing & DID-to-HTTPS | [iterations/07-url.md](iterations/07-url.md) |
-| [ ] | 8 | Log-chain validation & witness | [iterations/08-validation-witness.md](iterations/08-validation-witness.md) |
+| [x] | 8 | Log-chain validation & witness | [iterations/08-validation-witness.md](iterations/08-validation-witness.md) |
 | [ ] | 9 | DID resolution | [iterations/09-resolve.md](iterations/09-resolve.md) |
 | [ ] | 10 | Update, migration & deactivation | [iterations/10-update-migrate-deactivate.md](iterations/10-update-migrate-deactivate.md) |
 | [ ] | 11 | Parallel did:web publishing | [iterations/11-didweb.md](iterations/11-didweb.md) |
