@@ -1,6 +1,6 @@
 # Publishing to pub.dev
 
-How to publish the three packages (`didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard`) for the first
+How to publish the three packages (`didwebvh`, `didwebvh_signing_local`, `didwebvh_wizard`) for the first
 time and on every release after that. Start here if you have **no pub.dev account yet**.
 
 There are two phases: a **one-time setup + first manual publish** (because automated publishing can only be
@@ -44,8 +44,8 @@ you publish. **Publish in this exact order**, waiting for each to go live (usual
 next:
 
 ```
-1. didwebvh_core
-2. didwebvh_signing_local   # depends on didwebvh_core: ^0.1.0
+1. didwebvh
+2. didwebvh_signing_local   # depends on didwebvh: ^0.1.0
 3. didwebvh_wizard          # depends on both of the above
 ```
 
@@ -53,8 +53,8 @@ For each package, from the repo root:
 
 ```bash
 # 1. core
-(cd packages/didwebvh_core && dart pub publish)
-# …confirm it appears at https://pub.dev/packages/didwebvh_core, then:
+(cd packages/didwebvh && dart pub publish)
+# …confirm it appears at https://pub.dev/packages/didwebvh, then:
 
 # 2. signing_local
 (cd packages/didwebvh_signing_local && dart pub publish)
@@ -141,7 +141,7 @@ to a random branch can't publish, because its token claims won't match.
 This matters because `didwebvh-dart` is intended to be **donated to the Decentralized Identity Foundation
 (DIF)**. Read this before the first publish.
 
-- **First publish claims the name globally.** Once `didwebvh_core` (and the others) are published from your
+- **First publish claims the name globally.** Once `didwebvh` (and the others) are published from your
   account, the names are yours — no other account or publisher, **including DIF**, can independently publish a
   version of them. Names cannot be renamed or deleted to free them, and published versions are permanent (only
   *retractable*).

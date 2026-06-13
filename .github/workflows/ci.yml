@@ -25,8 +25,8 @@ jobs:
       # Single source of truth with the local gate: pub get + workspace analyze
       # + `dart test` for EVERY package with a test/ dir (core, signing_local,
       # and the wizard once it has tests). `--coverage` (stable leg only) also
-      # writes packages/didwebvh_core/coverage/lcov.info; coverage stays scoped
-      # to didwebvh_core per codecov.yml, but all package tests run on every leg.
+      # writes packages/didwebvh/coverage/lcov.info; coverage stays scoped
+      # to didwebvh per codecov.yml, but all package tests run on every leg.
       - name: Verify (analyze + all package tests + core coverage)
         run: bash tool/verify.sh ${{ matrix.sdk == 'stable' && '--coverage' || '' }}
 
@@ -35,5 +35,5 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: packages/didwebvh_core/coverage/lcov.info
+          files: packages/didwebvh/coverage/lcov.info
           fail_ci_if_error: false

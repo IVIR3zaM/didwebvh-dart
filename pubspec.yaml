@@ -7,7 +7,7 @@ environment:
   sdk: '^3.6.0'
 
 workspace:
-  - packages/didwebvh_core
+  - packages/didwebvh
   - packages/didwebvh_signing_local
   - packages/didwebvh_wizard
 

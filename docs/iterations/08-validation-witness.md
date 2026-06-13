@@ -38,5 +38,5 @@ Port validation tests; run the good/tampered and witness interop vectors (positi
   entries are validated against the **prior** active list (§3.7.5).
 - Shared test helpers live in `test/validate/validation_test_helpers.dart` (Java reuses
   `LogChainValidatorTest`'s static helpers in `WitnessValidatorTest`).
-- Gate: `dart pub get && dart analyze` clean; `dart test` all green (workspace VERIFY OK). `didwebvh_core` line
+- Gate: `dart pub get && dart analyze` clean; `dart test` all green (workspace VERIFY OK). `didwebvh` line
   coverage 94.7% (gate 80%).

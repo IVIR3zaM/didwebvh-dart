@@ -64,7 +64,7 @@ Read as little as possible. Do NOT read the whole docs tree.
    workspace dart analyze --fatal-infos, and dart test for every package with a
    test/ dir; it prints VERIFY OK / VERIFY FAILED. Run it after ANY change — it is
    the center of "nothing is broken". Use `tool/verify.sh --coverage` to gather
-   coverage for didwebvh_core when the iteration touches covered code.
+   coverage for didwebvh when the iteration touches covered code.
 
 10. Update CHANGELOG.md [Unreleased]. Add brief Implementation Notes to the iteration's
     detail file. Leave the box at [~]; the HUMAN flips [~] -> [x], commits, and adds a

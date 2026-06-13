@@ -32,6 +32,6 @@ Vector-gated: known SCIDs and entry hashes from `test-vectors/` and `interop/` m
   `getParameters()` were null; the Dart port uses `params!` to reproduce that throw-on-null for invalid input
   (a real first entry always has parameters).
 - Kept the generators package-private (not re-exported by the barrel), consistent with how iteration 2 left the
-  crypto primitives; tests import them via `package:didwebvh_core/src/crypto/...`.
+  crypto primitives; tests import them via `package:didwebvh/src/crypto/...`.
 - Gate: `tool/verify.sh --coverage` → `VERIFY OK`, 130 tests pass; all three new generator files appear in
   `coverage/lcov.info`. Includes the `Jcs.canonicalizeValue` work (see above) and its equivalence test.

@@ -32,7 +32,7 @@ Port signer tests; full create→sign→verify→resolve round-trip with this si
 - JWK uses `dart:convert` `base64Url` with padding stripped on encode and `base64Url.normalize` on decode, to
   match Java's `Base64.getUrlEncoder().withoutPadding()` / URL decoder.
 - **Core public-surface change (minimal dependency):** added `export 'src/crypto/multikey.dart'` to the
-  `didwebvh_core` barrel. `MultikeyUtil` is public cross-module API in Java; exporting it lets this package (and
+  `didwebvh` barrel. `MultikeyUtil` is public cross-module API in Java; exporting it lets this package (and
   the existing in-test `TestSigner`, whose now-redundant `src/...` import was removed) reference it without
   tripping `implementation_imports`.
 - Tests (`test/local_key_signer_test.dart`) port all `LocalKeySignerTest` cases and add the acceptance round-trip

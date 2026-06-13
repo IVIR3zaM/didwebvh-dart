@@ -107,8 +107,8 @@ didwebvh-dart/
 │   ├── AGENTS.md  ARCHITECTURE.md
 │   └── spec/Webvh v1.0.txt       # vendored source of truth (as in Java)
 └── packages/
-    ├── didwebvh_core/            # ← didwebvh-core
-    │   ├── lib/didwebvh_core.dart            # public barrel export (≈ DidWebVh facade)
+    ├── didwebvh/            # ← didwebvh-core
+    │   ├── lib/didwebvh.dart            # public barrel export (≈ DidWebVh facade)
     │   ├── lib/src/
     │   │   ├── core/        (DidWebVh, DidWebVhState, exceptions)
     │   │   ├── model/       (LogEntry, Parameters, DidDocument, DataIntegrityProof,
@@ -134,7 +134,7 @@ didwebvh-dart/
 ```
 
 **Naming alignment with Dart conventions** (the one place we deviate from Java to follow best practice):
-- Package & file names: `snake_case` (`didwebvh_core`, `scid_generator.dart`) — Dart standard.
+- Package & file names: `snake_case` (`didwebvh`, `scid_generator.dart`) — Dart standard.
 - Class names: `PascalCase` (unchanged from Java).
 - `lib/src/` = package-private (Java's "package-private by default"); only the barrel `lib/<pkg>.dart`
   re-exports the public surface — a direct analog of Java's visibility discipline.
@@ -161,7 +161,7 @@ The Java repo's "quality contract" maps almost 1:1:
 | Checkstyle + SpotBugs | `analysis_options.yaml` → `very_good_analysis` (analyzer `errors:` to fail build) |
 | JaCoCo 80% project+patch | `package:coverage` → lcov → Codecov; reuse `codecov.yml` thresholds verbatim |
 | JUnit5 + AssertJ + Mockito | `test` + matchers + `mocktail` |
-| Test vectors (`test-vectors/`, vendored interop) | Copy the **same** JSONL vectors into `packages/didwebvh_core/test/vectors/` — guarantees cross-impl interop and lets the Dart port validate byte-for-byte against the Java/Rust outputs |
+| Test vectors (`test-vectors/`, vendored interop) | Copy the **same** JSONL vectors into `packages/didwebvh/test/vectors/` — guarantees cross-impl interop and lets the Dart port validate byte-for-byte against the Java/Rust outputs |
 | SonarCloud quality gate | Optional: SonarCloud supports Dart via community plugin; otherwise Codecov + `dart analyze` fatal-warnings is sufficient. Recommend dropping Sonar initially to stay simple. |
 | Conventional Commits + Keep-a-Changelog | Identical; carry `CHANGELOG.md` + commit conventions over unchanged |
 | Maven Central + GPG release | pub.dev automated publishing via GitHub Actions OIDC (no GPG keys to manage) — simpler than the Java release flow |
@@ -205,7 +205,7 @@ Since the deliverable is a report, "verification" = correctness of the technical
   `http`, `args`, `test`, `mocktail`, `very_good_analysis`, `coverage`).
 - The "no RFC 8785 package" claim is verified via direct pub.dev search (0 results) — the report's central finding.
 
-When a future port begins, the *real* verification is: port `didwebvh_core`, copy the vendored interop vectors, and
+When a future port begins, the *real* verification is: port `didwebvh`, copy the vendored interop vectors, and
 prove `dart test` passes against the same vectors the Java suite uses. That is the single objective signal that the
 Dart port is "fully spec-aligned."
 
@@ -215,7 +215,7 @@ Dart port is "fully spec-aligned."
 
 **Policy (priority order).** When a faithful port and idiomatic Dart conflict, the priority is:
 
-1. **The cross-language interop vectors** (`packages/didwebvh_core/test/vectors/`) — above everything; never
+1. **The cross-language interop vectors** (`packages/didwebvh/test/vectors/`) — above everything; never
    traded away. They, not Java's source, define "correct".
 2. **Dart best practices** — idiomatic, readable Dart that a Dart developer (not a Java developer) would write.
 3. **Matching Java's exact *internal* approach** — lowest priority; valued only as a correctness aid, not a goal.

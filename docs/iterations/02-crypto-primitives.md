@@ -7,7 +7,7 @@ byte-exact foundations of the whole method. Port faithfully from `reference/didw
 `crypto/Jcs.java`, `crypto/MultihashUtil.java`, `crypto/Base58Btc.java`, `crypto/MultikeyUtil.java`
 (and their tests).
 
-### Produce (`packages/didwebvh_core/lib/src/crypto/`)
+### Produce (`packages/didwebvh/lib/src/crypto/`)
 - `jcs.dart` — port erdtman's JCS line-by-line (RFC 8785): recursive UTF-16-code-unit key sort, ECMAScript
   number serialization, minimal string escaping, UTF-8 output. **Do not** use pub.dev `canonical_json` (it is
   OLPC, not RFC 8785 — see decisions §1).

@@ -5,8 +5,8 @@
      the first pub.dev publish (publish under the donation-ready publisher, not earlier). -->
 [![Dart CI](https://github.com/IVIR3zaM/didwebvh-dart/actions/workflows/ci.yml/badge.svg)](https://github.com/IVIR3zaM/didwebvh-dart/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/IVIR3zaM/didwebvh-dart/branch/main/graph/badge.svg)](https://codecov.io/gh/IVIR3zaM/didwebvh-dart)
-[![pub package](https://img.shields.io/pub/v/didwebvh_core.svg)](https://pub.dev/packages/didwebvh_core)
-[![pub points](https://img.shields.io/pub/points/didwebvh_core)](https://pub.dev/packages/didwebvh_core/score)
+[![pub package](https://img.shields.io/pub/v/didwebvh.svg)](https://pub.dev/packages/didwebvh)
+[![pub points](https://img.shields.io/pub/points/didwebvh)](https://pub.dev/packages/didwebvh/score)
 [![Dart](https://img.shields.io/badge/Dart-3.6%2B-blue)](https://dart.dev/)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
@@ -23,7 +23,7 @@ document for `did:webvh` DIDs, with pluggable key management (local keys, KMS/HS
 
 | Package | Purpose |
 |---|---|
-| `didwebvh_core` | The library: model, crypto primitives (JCS, multihash, base58btc, multikey), SCID/entry-hash/proofs, create/update/resolve/validate, witness, did:web. |
+| `didwebvh` | The library: model, crypto primitives (JCS, multihash, base58btc, multikey), SCID/entry-hash/proofs, create/update/resolve/validate, witness, did:web. |
 | `didwebvh_signing_local` | `LocalKeySigner` — Ed25519 signing from a local JWK, implementing the async `Signer`. |
 | `didwebvh_wizard` | Interactive CLI for guided DID management. |
 
@@ -40,12 +40,12 @@ document for `did:webvh` DIDs, with pluggable key management (local keys, KMS/HS
 ```yaml
 # pubspec.yaml
 dependencies:
-  didwebvh_core: ^0.1.0
+  didwebvh: ^0.1.0
   didwebvh_signing_local: ^0.1.0   # only if you use the local-key signer
 ```
 
 ```bash
-dart pub add didwebvh_core didwebvh_signing_local
+dart pub add didwebvh didwebvh_signing_local
 ```
 
 ## Usage
@@ -54,7 +54,7 @@ dart pub add didwebvh_core didwebvh_signing_local
 > consistent interface across both libraries. The single intentional difference from Java is that signing is
 > **async**, so `Signer.sign` returns a `Future` and every `execute()` is awaited. Examples use `LocalKeySigner`
 > from `didwebvh_signing_local`; supply your own [`Signer`](#pluggable-key-management) to drop in KMS/HSM/etc.
-> All operations are exposed as static entry points on `DidWebVh` (package `didwebvh_core`).
+> All operations are exposed as static entry points on `DidWebVh` (package `didwebvh`).
 >
 > **Builder call styles (library-wide convention).** Every configurable operation — `DidWebVh.create`,
 > `update`, `migrate`, and `deactivate` — returns a builder whose optional settings can be supplied in **three
@@ -67,7 +67,7 @@ dart pub add didwebvh_core didwebvh_signing_local
 
 ```dart
 import 'dart:io';
-import 'package:didwebvh_core/didwebvh_core.dart';
+import 'package:didwebvh/didwebvh.dart';
 import 'package:didwebvh_signing_local/didwebvh_signing_local.dart';
 
 final signer = await LocalKeySigner.generate();

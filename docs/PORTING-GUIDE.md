@@ -17,7 +17,7 @@ that *isn't* in that document, stop and raise it instead.
 
 ## The three source-of-truth layers (in priority order)
 
-1. **The shared test vectors** (`packages/didwebvh_core/test/vectors/`) — the cross-language contract. If the
+1. **The shared test vectors** (`packages/didwebvh/test/vectors/`) — the cross-language contract. If the
    Dart output differs from a vector, the Dart code is wrong. Never edit a vector to make a test pass.
 2. **The Java reference** (`reference/didwebvh-java/`) — for *how* something is implemented. When behaviour is
    unclear, read the Java source rather than guessing.
@@ -55,14 +55,14 @@ It prints `VERIFY OK` on success or `VERIFY FAILED` (non-zero exit) on the first
 `dart test` is per-package in a pub workspace (running it from the root only prints help), always use the
 script rather than hand-rolling the commands — that way any new `test/` folder is automatically included.
 
-For `didwebvh_core`, collect coverage when the iteration touches covered code by adding `--coverage`; it writes
-`packages/didwebvh_core/coverage/lcov.info`:
+For `didwebvh`, collect coverage when the iteration touches covered code by adding `--coverage`; it writes
+`packages/didwebvh/coverage/lcov.info`:
 
 ```bash
 tool/verify.sh --coverage
 ```
 
-The 80% Codecov gate applies to `didwebvh_core` only; `didwebvh_signing_local` and `didwebvh_wizard` are thin
+The 80% Codecov gate applies to `didwebvh` only; `didwebvh_signing_local` and `didwebvh_wizard` are thin
 adapters and are excluded, mirroring the Java project.
 
 ## Human review — required on every commit

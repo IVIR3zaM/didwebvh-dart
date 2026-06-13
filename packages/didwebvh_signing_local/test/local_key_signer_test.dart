@@ -1,4 +1,4 @@
-import 'package:didwebvh_core/didwebvh_core.dart';
+import 'package:didwebvh/didwebvh.dart';
 import 'package:didwebvh_signing_local/didwebvh_signing_local.dart';
 import 'package:test/test.dart';
 

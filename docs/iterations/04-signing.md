@@ -20,7 +20,7 @@ Port proof tests; verify the proofs in the vendored vectors validate; generate�
 
 ### Implementation Notes
 - **Files added:** `lib/src/signing/signer.dart`, `proof_generator.dart`, `proof_verifier.dart` (all three
-  re-exported from the `didwebvh_core` barrel). Tests: `test/signing/test_signer.dart` (Ed25519-backed `Signer`),
+  re-exported from the `didwebvh` barrel). Tests: `test/signing/test_signer.dart` (Ed25519-backed `Signer`),
   `proof_generator_test.dart`, `proof_verifier_test.dart` (ports of the Java tests), and
   `proof_verifier_vectors_test.dart` (verifies every proof in all 13 interop `did.jsonl` vectors).
 - **`Signer.sign` is async** (`Future<Uint8List>`) — the documented delta. `ProofGenerator.generate` is therefore
@@ -33,5 +33,5 @@ Port proof tests; verify the proofs in the vendored vectors validate; generate�
   iteration 8** (the log-chain validation loop becomes async). No `ed25519_edwards` dependency was added.
 - **Naming:** Java's overloaded `verify(proof, LogEntry)` / `verify(proof, JsonObject)` → `verify` (LogEntry) and
   `verifyDocument` (Map), since Dart has no method overloading.
-- **Gate:** `tool/verify.sh --coverage` → `VERIFY OK`, 115 tests pass. `didwebvh_core` line coverage 92.9%
+- **Gate:** `tool/verify.sh --coverage` → `VERIFY OK`, 115 tests pass. `didwebvh` line coverage 92.9%
   (590/635); the three signing files are included in `lcov.info`.

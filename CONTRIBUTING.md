@@ -16,7 +16,7 @@ behaviour, proven by the same shared test vectors.
 
 - **Port faithfully.** When behaviour is unclear, read the Java source — don't redesign. The only allowed
   departures from Java are documented in `PORTING-DECISIONS.md` (notably the async `Signer`).
-- **Never edit the shared test vectors** (`packages/didwebvh_core/test/vectors/`). They are the cross-language
+- **Never edit the shared test vectors** (`packages/didwebvh/test/vectors/`). They are the cross-language
   contract; make the code match them.
 - **Never use the pub.dev `canonical_json` package** — it is not RFC 8785 and silently breaks interop.
 - **Keep dependencies minimal** — don't add a package for a 20-line task.
@@ -29,10 +29,10 @@ Every change must pass, and you must report the real result:
 
 ```bash
 tool/verify.sh            # pub get + analyze (--fatal-infos) + every package's tests
-tool/verify.sh --coverage # also emit packages/didwebvh_core/coverage/lcov.info
+tool/verify.sh --coverage # also emit packages/didwebvh/coverage/lcov.info
 ```
 
-This is the Dart analog of Java's `./mvnw clean verify`. Coverage ≥ 80% on `didwebvh_core`
+This is the Dart analog of Java's `./mvnw clean verify`. Coverage ≥ 80% on `didwebvh`
 (`signing_local` and `wizard` are excluded).
 
 The gate also runs automatically on every commit via the tracked pre-commit hook in

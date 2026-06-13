@@ -44,7 +44,7 @@ is at `docs/spec/Webvh v1.0.txt`.
 ## Key Technical Decisions (summary — full detail in `PORTING-DECISIONS.md`)
 
 - **Build/monorepo:** pub workspaces (Dart 3.6+), no Melos. Root `pubspec.yaml` with `workspace:` list.
-- **Packages:** `didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard`.
+- **Packages:** `didwebvh`, `didwebvh_signing_local`, `didwebvh_wizard`.
 - **Crypto:** `cryptography` (Ed25519; `DartEd25519` for in-core verification — its `verify` is async-only, so
   proof verification returns `Future<bool>`), `crypto` (SHA-256). JCS, multihash, base58btc, multikey are
   **ported internally** (byte-exact).
@@ -104,17 +104,17 @@ services, HSMs.
 ## Testing Standards
 
 - **`package:test`** for all tests; `mocktail` for mocks; `MockClient` for HTTP.
-- **Shared vectors** in `packages/didwebvh_core/test/vectors/` (`test-vectors/` + `interop/`) are copied
+- **Shared vectors** in `packages/didwebvh/test/vectors/` (`test-vectors/` + `interop/`) are copied
   verbatim from Java and are the cross-language interop contract. Never edit them.
 - Unit tests per public class; end-to-end tests for create → update → resolve → validate.
 - **The gate (run after _every_ change): [`tool/verify.sh`](../tool/verify.sh).** This is the single
   source of truth that nothing is broken — the Dart analog of Java's `./mvnw clean verify`. It runs
   `dart pub get`, workspace-wide `dart analyze --fatal-infos`, and `dart test` for **every** package that has a
   `test/` dir (running `dart test` from the workspace root only prints help, so never rely on that). Pass
-  `tool/verify.sh --coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Report its real result
+  `tool/verify.sh --coverage` to also emit `packages/didwebvh/coverage/lcov.info`. Report its real result
   (`VERIFY OK` / `VERIFY FAILED`, with output). Do not hand-roll the individual commands — use the script so new
   test folders are always included.
-- Coverage ≥ 80% on `didwebvh_core` (Codecov); `signing_local` and `wizard` excluded, as in Java.
+- Coverage ≥ 80% on `didwebvh` (Codecov); `signing_local` and `wizard` excluded, as in Java.
 
 ## CI/CD
 

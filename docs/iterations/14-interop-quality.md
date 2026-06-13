@@ -9,7 +9,7 @@ Java CI quality contract (decisions §5); `README.md`, `CHANGELOG.md`, publishin
 ### Produce
 - Confirm **every** vendored vector (`test-vectors/` + `interop/`) passes — the single objective signal that
   the port is "fully spec-aligned".
-- Coverage ≥ 80% on `didwebvh_core` (Codecov gate). Finalize `README.md`, examples, and `publish.yml`.
+- Coverage ≥ 80% on `didwebvh` (Codecov gate). Finalize `README.md`, examples, and `publish.yml`.
 
 ### Acceptance
 - All shared vectors green; coverage gate met; docs and publish workflow complete.
@@ -17,21 +17,21 @@ Java CI quality contract (decisions §5); `README.md`, `CHANGELOG.md`, publishin
 ### Implementation Notes
 
 - **Gate is green.** `tool/verify.sh --coverage` ends in `VERIFY OK`: `dart analyze --fatal-infos` reports
-  *no issues*; all package suites pass (`didwebvh_core` 355, `didwebvh_signing_local` 9, `didwebvh_wizard` 24).
+  *no issues*; all package suites pass (`didwebvh` 355, `didwebvh_signing_local` 9, `didwebvh_wizard` 24).
   Every vendored cross-language vector (`test-vectors/` + `interop/`) passes — the single objective "fully
   spec-aligned" signal.
-- **Coverage met.** `didwebvh_core` line coverage is **94.89%** (1652 / 1741), comfortably above the 80%
+- **Coverage met.** `didwebvh` line coverage is **94.89%** (1652 / 1741), comfortably above the 80%
   Codecov gate. `didwebvh_signing_local` and `didwebvh_wizard` are thin adapters and stay off the gate
   (decisions §5).
 - **All three packages made publishable for v0.1.0** (a deliberate drift from Java: the wizard is now published
   too, so it installs via `dart pub global activate`). Removed `publish_to: none`; replaced sibling `path:`
-  dependencies with hosted version constraints (`didwebvh_core: ^0.1.0`, …) — the pub workspace still resolves
+  dependencies with hosted version constraints (`didwebvh: ^0.1.0`, …) — the pub workspace still resolves
   them locally for dev. Added `LICENSE` (Apache-2.0) to each package, per-package `README.md` + `CHANGELOG.md`,
   `topics`/`issue_tracker` metadata, and an `executables:` entry for the wizard. `dart pub publish --dry-run`
   passes for all three (only the expected "uncommitted changes" warning). `publish.yml` now also triggers on
   `didwebvh_wizard-v*` tags.
 - **Examples** for the two library packages:
-  - `packages/didwebvh_core/example/didwebvh_core_example.dart` — full **create → resolve → update** lifecycle
+  - `packages/didwebvh/example/didwebvh_example.dart` — full **create → resolve → update** lifecycle
     using a minimal inline Ed25519 `Signer` (core defines `Signer` but ships no key impl; the inline signer keeps
     the example self-contained and demonstrates the bring-your-own-signer extension point).
   - `packages/didwebvh_signing_local/example/didwebvh_signing_local_example.dart` — full

@@ -64,4 +64,4 @@ owns witness *validation* and the proof collection types).
 
 Gate: `dart pub get && dart analyze --fatal-infos && dart test` all green (88
 tests). Coverage on the new model/witness/exception sources ≈ 93%
-(`didwebvh_core` package ≈ 92%).
+(`didwebvh` package ≈ 92%).

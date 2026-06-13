@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:didwebvh_core/didwebvh_core.dart';
+import 'package:didwebvh/didwebvh.dart';
 
 /// Signer backed by a local Ed25519 key pair held in memory.
 ///

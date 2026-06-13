@@ -11,11 +11,11 @@ All notable changes to this project are documented here. The format is based on
 ## [0.1.0] - 2026-06-13
 
 First release — a complete, interop-verified Dart port of the three `didwebvh-java` modules across a pub
-workspace (`didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard`).
+workspace (`didwebvh`, `didwebvh_signing_local`, `didwebvh_wizard`).
 
 ### Added
 
-- **did:webvh v1.0 method (`didwebvh_core`).** Full create / resolve / update / migrate / deactivate, plus
+- **did:webvh v1.0 method (`didwebvh`).** Full create / resolve / update / migrate / deactivate, plus
   parallel `did:web` publishing (spec §3.7.10), behind the `DidWebVh` facade and `DidWebVhState` holder.
 - **Byte-exact crypto primitives** ported from the Java `crypto/` package: JCS (RFC 8785 canonicalization),
   `sha2-256` multihash, base58btc multibase (`z`) framing, Ed25519 W3C Multikey (`0xed01`), SCID, entry-hash,
@@ -40,9 +40,9 @@ workspace (`didwebvh_core`, `didwebvh_signing_local`, `didwebvh_wizard`).
 - **`didwebvh_wizard`**: an interactive CLI (`didwebvh_wizard`, installable via `dart pub global activate`) for
   create / update (modify, migrate, deactivate) / resolve / export-`did:web`, with `--dir`/`--action` options and
   an automatic witness key store + proof collection.
-- **Runnable `example/` programs** for `didwebvh_core` (create → resolve → update with an inline signer) and
+- **Runnable `example/` programs** for `didwebvh` (create → resolve → update with an inline signer) and
   `didwebvh_signing_local` (full create → sign → resolve round-trip).
 - **Project infrastructure**: pub-workspace layout (`sdk: ^3.6.0`), `very_good_analysis` (pinned `^7.0.0` for the
-  3.6 floor), the `tool/verify.sh` one-shot gate, Codecov (80% on `didwebvh_core`; `didwebvh_core` ships at
+  3.6 floor), the `tool/verify.sh` one-shot gate, Codecov (80% on `didwebvh`; `didwebvh` ships at
   ~95%), CI SDK matrix (`3.6.0`/`stable`/`beta`), and tag-triggered pub.dev OIDC publishing. The full porting
   history and decisions live under `docs/`.

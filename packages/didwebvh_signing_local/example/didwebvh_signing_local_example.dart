@@ -5,7 +5,7 @@
 // Run from the package directory:
 // `dart run example/didwebvh_signing_local_example.dart`.
 // ignore_for_file: avoid_print
-import 'package:didwebvh_core/didwebvh_core.dart';
+import 'package:didwebvh/didwebvh.dart';
 import 'package:didwebvh_signing_local/didwebvh_signing_local.dart';
 
 Future<void> main() async {

@@ -9,12 +9,12 @@
 #
 # `dart test` is per-package in a pub workspace, so this script discovers each
 # package under packages/ that has a test/ directory and runs its suite. Coverage
-# is collected for didwebvh_core (the package that carries the 80% gate); pass
-# --coverage to also write packages/didwebvh_core/coverage/lcov.info.
+# is collected for didwebvh (the package that carries the 80% gate); pass
+# --coverage to also write packages/didwebvh/coverage/lcov.info.
 #
 # Usage:
 #   tool/verify.sh             # pub get + analyze + all tests
-#   tool/verify.sh --coverage  # also emit lcov for didwebvh_core
+#   tool/verify.sh --coverage  # also emit lcov for didwebvh
 set -euo pipefail
 
 # Resolve repo root from this script's location so it works from any cwd.
@@ -40,7 +40,7 @@ for pkg in packages/*/; do
   [[ -d "${pkg}test" ]] || continue
   name="$(basename "$pkg")"
   ran_any=1
-  if [[ "$name" == "didwebvh_core" && "$WITH_COVERAGE" -eq 1 ]]; then
+  if [[ "$name" == "didwebvh" && "$WITH_COVERAGE" -eq 1 ]]; then
     bold "dart test --coverage ($name)"
     if ( cd "$pkg" && dart test --coverage=coverage ); then
       ( cd "$pkg"

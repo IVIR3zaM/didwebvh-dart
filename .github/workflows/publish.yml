@@ -17,7 +17,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 jobs:
-  didwebvh_core:
+  didwebvh:
     permissions:
       id-token: write # required for pub.dev OIDC authentication
     runs-on: ubuntu-latest
@@ -26,20 +26,20 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - name: Resolve workspace dependencies
         run: dart pub get
-      - name: Publish didwebvh_core
+      - name: Publish didwebvh
         run: dart pub publish --force
-        working-directory: packages/didwebvh_core
+        working-directory: packages/didwebvh
 
   didwebvh_signing_local:
-    needs: didwebvh_core
+    needs: didwebvh
     permissions:
       id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: dart-lang/setup-dart@v1
-      - name: Wait for didwebvh_core on pub.dev
-        run: bash tool/wait-for-pub.sh didwebvh_core "${GITHUB_REF_NAME#v}"
+      - name: Wait for didwebvh on pub.dev
+        run: bash tool/wait-for-pub.sh didwebvh "${GITHUB_REF_NAME#v}"
       - name: Resolve workspace dependencies
         run: dart pub get
       - name: Publish didwebvh_signing_local
@@ -56,7 +56,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - name: Wait for dependencies on pub.dev
         run: |
-          bash tool/wait-for-pub.sh didwebvh_core "${GITHUB_REF_NAME#v}"
+          bash tool/wait-for-pub.sh didwebvh "${GITHUB_REF_NAME#v}"
           bash tool/wait-for-pub.sh didwebvh_signing_local "${GITHUB_REF_NAME#v}"
       - name: Resolve workspace dependencies
         run: dart pub get

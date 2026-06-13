@@ -7,7 +7,7 @@ Stop for human review; never commit.
 `reference/didwebvh-java/didwebvh-core/src/test/resources/` (`test-vectors/`, `interop/`).
 
 ### Produce
-- Copy **verbatim** into `packages/didwebvh_core/test/vectors/` (keep `test-vectors/` and `interop/` subdirs,
+- Copy **verbatim** into `packages/didwebvh/test/vectors/` (keep `test-vectors/` and `interop/` subdirs,
   including the JSONL/JSON files and their `README.md`s). These bytes are the cross-language interop contract —
   do not regenerate or reformat them.
 - A small Dart test helper to load vector files by path.
@@ -18,7 +18,7 @@ Stop for human review; never commit.
 ### Implementation Notes
 - Copied all **26** files verbatim from `reference/didwebvh-java/didwebvh-core/src/test/resources/`
   (`test-vectors/` 8 files + `interop/` 18 files, including the two `README.md`s) into
-  `packages/didwebvh_core/test/vectors/`. SHA-256 of every copied file matches the Java source (verified by
+  `packages/didwebvh/test/vectors/`. SHA-256 of every copied file matches the Java source (verified by
   diffing checksum lists — all match). Removed the placeholder `.gitkeep`.
 - Load helper `test/support/test_vectors.dart` (`TestVectors` class) mirrors Java's
   `TestVectors.readResource`: `readVector(relativePath)` reads UTF-8 contents relative to `test/vectors/`,

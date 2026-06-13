@@ -9,13 +9,13 @@ apply only deltas in [`../PORTING-DECISIONS.md`](../PORTING-DECISIONS.md). Stop 
 
 ### Produce
 - Pub-workspace root `pubspec.yaml` (`workspace:` list, `environment: sdk: '^3.6.0'`).
-- `packages/didwebvh_core/`, `packages/didwebvh_signing_local/`, `packages/didwebvh_wizard/` with their own
+- `packages/didwebvh/`, `packages/didwebvh_signing_local/`, `packages/didwebvh_wizard/` with their own
   `pubspec.yaml`, public barrel `lib/<pkg>.dart`, and `lib/src/` tree (decisions §4). Pin **`sdk: '^3.6.0'` on
   every package** — same floor as the workspace, matching Affinidi `ssi` (decisions §3).
 - `analysis_options.yaml` including `very_good_analysis`.
 - `.github/workflows/ci.yml` (`dart analyze` + `dart test --coverage` + Codecov; SDK matrix stable / 3.6.0 /
   beta) and `publish.yml` (tag-triggered, pub.dev OIDC).
-- `codecov.yml` (80% project + patch; gate scoped to `didwebvh_core`).
+- `codecov.yml` (80% project + patch; gate scoped to `didwebvh`).
 - `.gitignore` (Dart + `reference/`), `LICENSE` (already vendored), `CHANGELOG.md`, `CONTRIBUTING.md`,
   `README.md`, `SECURITY.md`.
 
@@ -36,16 +36,16 @@ apply only deltas in [`../PORTING-DECISIONS.md`](../PORTING-DECISIONS.md). Stop 
 - **`lib/src/` trees** created with the §4 subdirectory layout; empty dirs hold a `.gitkeep` (git ignores empty
   dirs). `test/vectors/` placeholder added to core (vectors land in iteration 1). Barrels currently export nothing
   but the `library;` directive — public surface grows per iteration.
-- **Smoke test**: `test/didwebvh_core_test.dart` does not import the (empty) barrel to avoid an `unused_import`
+- **Smoke test**: `test/didwebvh_test.dart` does not import the (empty) barrel to avoid an `unused_import`
   lint; it just asserts the package builds so `dart test` has a green target.
 - **CI**: matrix `3.6.0` / `stable` / `beta` (analog of Java 11/17/21/25); runs `dart analyze --fatal-infos` and
-  `dart test --coverage` in `packages/didwebvh_core`, uploads lcov to Codecov on the `stable` leg only.
+  `dart test --coverage` in `packages/didwebvh`, uploads lcov to Codecov on the `stable` leg only.
 - **publish.yml**: tag-triggered pub.dev OIDC (`id-token: write`); per-package tag pattern
-  `didwebvh_core-vX.Y.Z` / `didwebvh_signing_local-vX.Y.Z` (wizard not published). Replaces Maven Central + GPG.
+  `didwebvh-vX.Y.Z` / `didwebvh_signing_local-vX.Y.Z` (wizard not published). Replaces Maven Central + GPG.
 - **`tool/verify.sh`** — one-shot gate mirroring Java's `./mvnw clean verify`. `dart test` is per-package in a
   pub workspace (running it from the root only prints help, since the root package has no `test/` dir), so the
   script discovers every `packages/*/` that has a `test/` dir and runs each suite, then reports pass/fail. With
-  `--coverage` it collects coverage for `didwebvh_core` and writes `coverage/lcov.info`. Coverage formatting uses
+  `--coverage` it collects coverage for `didwebvh` and writes `coverage/lcov.info`. Coverage formatting uses
   `format_coverage --package=.` (the deprecated `--packages=<package_config>.json` form is now rejected by the
   current `coverage` package); the CI workflow was updated to match. Note: until `lib/` has executable code the
   emitted `lcov.info` is empty (0 bytes) — expected for the scaffold; `coverage/` is git-ignored.
