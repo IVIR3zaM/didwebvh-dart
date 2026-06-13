@@ -1,0 +1,12 @@
+# Inherit the package (→ workspace) rule set.
+include: ../../../analysis_options.yaml
+
+linter:
+  rules:
+    # CreateDidConfig is a faithful port of Java's fluent builder
+    # (CreateDidConfig): each setter returns `this` for chaining, and `portable`
+    # takes a positional boolean to mirror the Java signature exactly. These two
+    # guards fight the builder idiom; exempted here only, same narrow scoping as
+    # lib/src/model/ and lib/src/witness/.
+    avoid_returning_this: false
+    avoid_positional_boolean_parameters: false

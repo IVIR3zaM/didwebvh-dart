@@ -55,6 +55,20 @@ is at `docs/spec/Webvh v1.0.txt`.
   drops Java's encode→parse round-trip; output is byte-identical (see PORTING-DECISIONS.md §8).
 - **JSON:** `dart:convert` + hand-written `toJson`/`fromJson`; precise null-omit control for canonical lines.
   No codegen / `build_runner`.
+- **Config-builder call styles (library-wide):** every configurable operation builder (`CreateDidConfig`, and
+  by the same decision the future `UpdateDidConfig` / `MigrateDidConfig` / `DeactivateDidConfig`) supports **three
+  interchangeable call styles** — (1) **fluent** chaining (faithful to the Java builder; setters `return this`),
+  (2) **cascade** (`..`, free since `..` ignores the return value), and (3) **named parameters** at construction
+  (a delegating constructor that applies each non-null argument through its like-named setter — one source of
+  truth for copy/normalization; also forwarded through the `DidWebVh.*` facade). Keeping the fluent style requires
+  setters that `return this` and a positional boolean toggle (e.g. `portable(true)`), so `avoid_returning_this`
+  and `avoid_positional_boolean_parameters` are suppressed **scoped to that builder's `lib/src/<op>/` directory
+  only** (same narrow-scoping as the `model/` and `witness/` equality exemptions). `avoid_positional_boolean_parameters`
+  is a recognized false-positive for a single, well-named boolean setter; the alternatives each cost something
+  (drop the fluent style, lose explicit `false`, or mix styles). Value-type configs that are **not** builders
+  (e.g. `ResolveOptions`) stay plain named-parameter value types — do not add builder machinery for symmetry.
+  Document the styles **once** as a library-wide convention (README Usage preamble + one worked example), never
+  per-method. (Decided in iteration 6; see `docs/iterations/06-create.md` and `PORTING-DECISIONS.md` §8.)
 - **HTTP:** `package:http` behind a `RemoteDidFetcher` (10s timeout, 200KB cap, as in Java).
 - **CLI:** `package:args` (`CommandRunner`); `WizardIo` abstraction for testable prompts.
 - **Tests:** `package:test` + `mocktail` + `http`'s `MockClient`. Lint: `very_good_analysis`.

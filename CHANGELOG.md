@@ -88,6 +88,30 @@ All notable changes to this project are documented here. The format is based on
     barrel is unchanged. Tests port the Java `ScidGeneratorTest` / `EntryHashGeneratorTest` /
     `PreRotationHashGeneratorTest`, plus vector-gated tests proving byte-exact SCID and entry-hash-chain
     derivation against the vendored interop logs (`first-log-entry-good.jsonl`, `multi-entry-log.jsonl`).
+- Iteration 6 — DID creation (`packages/didwebvh_core/lib/src/create/` + `lib/src/core/did_webvh.dart`),
+  ported from the Java `create/` package and the `DidWebVh` facade (spec §3.6.1):
+  - `create/create_did_config.dart` (`CreateDidConfig`) — builder (`domain` + `signer` required; optional
+    `path`, `portable`, `ttl`, `alsoKnownAs`, `controllers`, `witness`, `watchers`, `nextKeyHashes`,
+    `additionalDocumentContent`) supporting three interchangeable call styles: **fluent** chaining (setters return
+    `this`, Java-style), **cascade** (`..`, idiomatic Dart — works on the same setters since `..` ignores the
+    return value), and **named parameters** at construction (a delegating constructor that applies each non-null
+    argument through its like-named setter, so there is one source of truth for the copy/normalization logic). The
+    named arguments are also forwarded through `DidWebVh.create`. `execute()` returns `Future<CreateDidResult>`
+    (the async-`Signer` ripple, decisions §4). Package-private accessors carry a `Value` suffix where they would
+    clash with the like-named setter (`pathValue`, `portableValue`, …).
+  - `create/create_did_operation.dart` (`CreateDidOperation`) — the 10-step creation flow: build the
+    `{SCID}`-templated DID + document + parameters, derive the SCID, string-replace the placeholder, compute the
+    entry hash (predecessor = SCID), set `versionId` to `1-<hash>`, then generate and attach the proof. Controller
+    handling matches Java exactly (null → self; empty → omit; one → string; many → array). `execute` is `async`.
+  - `create/create_did_result.dart` (`CreateDidResult`) — `did` / `logEntry` / `logLine` holder.
+  - `core/did_webvh.dart` (`DidWebVh`) — public facade; only `create(domain, signer)` so far
+    (update/migrate/deactivate/validate/resolve land in iterations 7–10).
+  - The public barrel re-exports `DidWebVh`, `CreateDidConfig`, `CreateDidResult`. Tests port the Java
+    `CreateDidOperationTest` one-for-one (async-adapted) and add a vector check that the
+    `first-log-entry-good.jsonl` entry's SCID, entry hash, and proof all verify and that a fresh creation produces
+    the same `state` key ordering. A `lib/src/create/analysis_options.yaml` scopes `avoid_returning_this` /
+    `avoid_positional_boolean_parameters` off for the fluent builder only (same narrow-scoping pattern as
+    `lib/src/model/` and `lib/src/witness/`).
 
 ### Changed
 - `Jcs` — added `Jcs.canonicalizeValue(Object?)`, now the primary entry point: it canonicalizes an

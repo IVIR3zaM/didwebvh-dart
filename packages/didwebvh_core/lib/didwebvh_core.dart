@@ -6,7 +6,10 @@
 /// Public exports are added as each iteration lands (see docs/PORTING-STATUS.md).
 library;
 
+export 'src/core/did_webvh.dart';
 export 'src/core/exceptions.dart';
+export 'src/create/create_did_config.dart';
+export 'src/create/create_did_result.dart';
 export 'src/model/data_integrity_proof.dart';
 export 'src/model/did_document.dart';
 export 'src/model/json_support.dart' show JsonModel;

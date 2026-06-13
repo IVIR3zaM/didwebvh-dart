@@ -63,6 +63,13 @@ dart pub add didwebvh_core didwebvh_signing_local
 > **async**, so `Signer.sign` returns a `Future` and every `execute()` is awaited. Examples use `LocalKeySigner`
 > from `didwebvh_signing_local`; supply your own [`Signer`](#pluggable-key-management) to drop in KMS/HSM/etc.
 > All operations are exposed as static entry points on `DidWebVh` (package `didwebvh_core`).
+>
+> **Builder call styles (library-wide convention).** Every configurable operation — `DidWebVh.create`,
+> `update`, `migrate`, and `deactivate` — returns a builder whose optional settings can be supplied in **three
+> interchangeable styles**: fluent chaining, cascades (`..`), or named parameters at construction. They are
+> equivalent; pick whichever reads best. The examples below use the fluent form for brevity; the three forms are
+> shown side by side once under [Create a DID](#create-a-did). (`resolve` takes a plain DID string and a value-type
+> `ResolveOptions`, so it has no builder.)
 
 ### Create a DID
 
@@ -82,6 +89,21 @@ final result = await DidWebVh.create('example.com', signer)
 
 final did = result.did;          // e.g. did:webvh:QmSCID:example.com:dids:alice
 final logLine = result.logLine;  // write this as the first line of did.jsonl
+```
+
+As noted above, the optional settings can be supplied in **three interchangeable styles** — pick whichever reads
+best; they produce the same result. This applies to every builder operation (`create`, `update`, `migrate`,
+`deactivate`); it is shown here once and not repeated for the others:
+
+```dart
+// 1. Fluent chaining (shown above; mirrors the Java builder):
+await DidWebVh.create('example.com', signer).portable(true).ttl(3600).execute();
+
+// 2. Cascade (idiomatic Dart — the setters work under `..` too):
+await (DidWebVh.create('example.com', signer)..portable(true)..ttl(3600)).execute();
+
+// 3. Named parameters at construction:
+await DidWebVh.create('example.com', signer, portable: true, ttl: 3600).execute();
 ```
 
 Save the signer material safely — you need it to sign every subsequent update:
