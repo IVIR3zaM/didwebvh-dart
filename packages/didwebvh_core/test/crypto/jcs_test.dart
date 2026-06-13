@@ -117,11 +117,28 @@ void main() {
       });
     });
 
-    test('canonicalize JsonObject equivalent (pre-encoded map)', () {
-      // The Java canonicalize(JsonObject) overload just does json.toString();
-      // the Dart caller passes the encoded string, so this is the same path.
-      final encoded = jsonEncode({'b': 2, 'a': 1});
-      expect(canon(encoded), '{"a":1,"b":2}');
+    test('canonicalizeValue canonicalizes a decoded map directly', () {
+      // The idiomatic Dart entry point: callers hold a decoded structure and
+      // canonicalize it without an encode/decode round-trip.
+      final value = <String, Object?>{'b': 2, 'a': 1};
+      expect(utf8.decode(Jcs.canonicalizeValue(value)), '{"a":1,"b":2}');
+    });
+
+    test('canonicalizeValue equals canonicalize(String) for the same JSON', () {
+      // Skipping the round-trip must not change a single byte: the
+      // decoded-value path and the string path produce identical output.
+      final value = <String, Object?>{
+        'versionId': 'v',
+        'nested': [
+          {'z': 1, 'a': true, 'n': null},
+          'string',
+          42,
+        ],
+      };
+      expect(
+        Jcs.canonicalizeValue(value),
+        Jcs.canonicalize(jsonEncode(value)),
+      );
     });
   });
 }

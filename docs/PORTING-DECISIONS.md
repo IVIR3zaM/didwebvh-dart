@@ -210,6 +210,45 @@ Dart port is "fully spec-aligned."
 
 ---
 
+## 8. Idiomatic Dart over Java's internal shape — and the JCS value API (iteration 5)
+
+**Policy (priority order).** When a faithful port and idiomatic Dart conflict, the priority is:
+
+1. **The cross-language interop vectors** (`packages/didwebvh_core/test/vectors/`) — above everything; never
+   traded away. They, not Java's source, define "correct".
+2. **Dart best practices** — idiomatic, readable Dart that a Dart developer (not a Java developer) would write.
+3. **Matching Java's exact *internal* approach** — lowest priority; valued only as a correctness aid, not a goal.
+
+In practice (1) and (2) almost never conflict — reproducing the vectors *is* the spec. (2) vs (3) is the live
+tension: we do **not** want this library to read like transliterated Java. So where Java's internal mechanics are
+un-idiomatic in Dart, we choose the Dart shape and record the divergence here. The byte-level contract is still
+proven — against the vectors, not against Java's call graph.
+
+**First application — `Jcs.canonicalizeValue`.** Java's `Jcs` exposes `canonicalize(String)` and
+`canonicalize(JsonObject)`, and the object overload is just `canonicalize(json.toString())` — i.e. Java
+re-serializes the object to text and re-parses it inside erdtman's `JsonCanonicalizer`. The original Dart port
+mirrored this (`Jcs.canonicalize(jsonEncode(map))`), so building an entry hash meant **encode → decode → encode**
+for a value we already held decoded.
+
+did:webvh code paths build and mutate **decoded** structures (maps) — that is the idiomatic Dart shape — so the
+canonical entry point is now:
+
+- `Jcs.canonicalizeValue(Object?)` — canonicalizes an already-decoded JSON value directly (serializes via the
+  same `_serialize` routine, no round-trip). Used by `EntryHashGenerator` and `ProofGenerator`.
+- `Jcs.canonicalize(String)` — retained for genuinely text-only inputs (the SCID step string-replaces the
+  `{SCID}` placeholder in serialized text); it decodes once and delegates to `canonicalizeValue`.
+
+**Why this is safe (byte-exactness).** The only thing Java's round-trip adds is a re-parse; canonicalization is a
+pure function of the *decoded* value, and `jsonEncode`/`jsonDecode` is an identity round-trip for the JSON types
+did:webvh uses (object, array, string, bool, null, and integers — no floats, no number edge cases). A unit test
+asserts `canonicalizeValue(v) == canonicalize(jsonEncode(v))` byte-for-byte, and the unchanged interop-vector
+tests (entry-hash chain, and every `eddsa-jcs-2022` proof in all vendored `did.jsonl`) still pass. This drops the
+divergence from Java to the *internal* level only; observable bytes are identical.
+
+This codifies guiding principle 2 in `docs/AGENTS.md` ("Idiomatic Dart first").
+
+---
+
 ## Implementation step for this task
 
 Commit this report to the **Java** repo as `docs/dart-port/PORTING-DECISIONS.md` (it documents a planned sibling

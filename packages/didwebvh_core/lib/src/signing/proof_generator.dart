@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:didwebvh_core/src/crypto/base58btc.dart';
@@ -41,9 +40,8 @@ abstract final class ProofGenerator {
   ) {
     final proofConfig = proof.toJson(omitNull: true)..remove('proofValue');
     final proofHash =
-        MultihashUtil.sha256(Jcs.canonicalize(jsonEncode(proofConfig)));
-    final docHash =
-        MultihashUtil.sha256(Jcs.canonicalize(jsonEncode(document)));
+        MultihashUtil.sha256(Jcs.canonicalizeValue(proofConfig));
+    final docHash = MultihashUtil.sha256(Jcs.canonicalizeValue(document));
     final out = Uint8List(proofHash.length + docHash.length)
       ..setRange(0, proofHash.length, proofHash)
       ..setRange(proofHash.length, proofHash.length + docHash.length, docHash);

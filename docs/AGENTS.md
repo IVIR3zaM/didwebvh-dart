@@ -24,14 +24,22 @@ is at `docs/spec/Webvh v1.0.txt`.
 
 ## Guiding Principles (inherited from the Java project)
 
-1. **Identical behaviour to Java.** This is a translation. Read the Java source for any behaviour question;
-   don't redesign while porting. The shared test vectors are the contract.
-2. **Simplicity over abstraction.** A reader should understand the code without tracing many layers. Patterns
+1. **Identical observable behaviour to Java.** This is a translation. Read the Java source for any behaviour
+   question; don't redesign while porting. The shared cross-language test vectors — not Java's *internal*
+   implementation shape — are the contract: any code path must produce the **same bytes / same outcomes** as the
+   vectors. Mirroring *how* Java does something internally (e.g. its JSON round-trips) is not itself a goal.
+2. **Idiomatic Dart first.** When a faithful port and idiomatic Dart pull in different directions, prefer
+   idiomatic Dart, provided the vectors still pass byte-for-byte. The priority order is: **(1)** Dart best
+   practices, then **(2)** matching Java's exact internal approach. These almost never conflict — but when they
+   do, choose Dart and document the divergence in `PORTING-DECISIONS.md`. The interop vectors are above both and
+   are never traded away. (First applied: `Jcs.canonicalizeValue` canonicalizes a decoded value directly instead
+   of replaying Java's encode→parse round-trip — see PORTING-DECISIONS.md §8.)
+3. **Simplicity over abstraction.** A reader should understand the code without tracing many layers. Patterns
    only when they earn their keep (the `Signer` adapter is the canonical example).
-3. **SOLID, not academic.** No interfaces for single implementations beyond the documented extension points.
-4. **Spec fidelity.** `docs/spec/Webvh v1.0.txt` is the ultimate source of truth; reference section numbers in
+4. **SOLID, not academic.** No interfaces for single implementations beyond the documented extension points.
+5. **Spec fidelity.** `docs/spec/Webvh v1.0.txt` is the ultimate source of truth; reference section numbers in
    comments for non-obvious logic.
-5. **Test-driven.** Every public method has tests; spec logic is gated on the shared vectors.
+6. **Test-driven.** Every public method has tests; spec logic is gated on the shared vectors.
 
 ## Key Technical Decisions (summary — full detail in `PORTING-DECISIONS.md`)
 
@@ -41,6 +49,10 @@ is at `docs/spec/Webvh v1.0.txt`.
   proof verification returns `Future<bool>`), `crypto` (SHA-256). JCS, multihash, base58btc, multikey are
   **ported internally** (byte-exact).
 - **Do NOT use** the pub.dev `canonical_json` package — it is OLPC, not RFC 8785, and breaks interop.
+- **JCS API:** `Jcs.canonicalizeValue(Object?)` is the primary entry point — it canonicalizes an already-decoded
+  JSON value directly (the shape did:webvh code actually holds). `Jcs.canonicalize(String)` is the convenience for
+  text-only inputs (the SCID `{SCID}` string-replace step) and just decodes then delegates. This intentionally
+  drops Java's encode→parse round-trip; output is byte-identical (see PORTING-DECISIONS.md §8).
 - **JSON:** `dart:convert` + hand-written `toJson`/`fromJson`; precise null-omit control for canonical lines.
   No codegen / `build_runner`.
 - **HTTP:** `package:http` behind a `RemoteDidFetcher` (10s timeout, 200KB cap, as in Java).

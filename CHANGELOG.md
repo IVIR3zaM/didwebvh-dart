@@ -72,6 +72,34 @@ All notable changes to this project are documented here. The format is based on
     `ProofGeneratorTest` / `ProofVerifierTest` (generate→verify round-trip, tamper detection, `isAuthorized`,
     `extractMultikey`) and add a vector test that verifies **every** proof in all 13 vendored interop `did.jsonl`
     files — the cross-language byte-exactness contract for JCS + multihash + eddsa-jcs-2022.
+- Iteration 5 — SCID, entry-hash & pre-rotation generators
+  (`packages/didwebvh_core/lib/src/crypto/`), ported from the Java `crypto/` package; all three reuse the
+  iteration-2 byte-exact primitives (`Jcs`, `MultihashUtil`, `Base58Btc`):
+  - `scid_generator.dart` (`ScidGenerator`) — derives the SCID from a preliminary first log entry (spec §3.3 /
+    §3.7.3): `base58btc(multihash(JCS(entry-with-{SCID}-placeholders)))`. `generate`, `verify` (strip proof,
+    reset `versionId`/`scid` to `{SCID}`, string-replace the SCID, re-derive), and `placeholder()`.
+  - `entry_hash_generator.dart` (`EntryHashGenerator`) — computes the entry-hash portion of `versionId`
+    (spec §4.2): strip `proof`, substitute the predecessor `versionId`, then
+    `base58btc(multihash(JCS(entry)))`. Canonicalizes the decoded entry map directly via the new
+    `Jcs.canonicalizeValue` (see below).
+  - `pre_rotation_hash_generator.dart` (`PreRotationHashGenerator`) — pre-rotation commitment hash (spec §3.5 /
+    §3.7.7): `base58btc(multihash(utf8(multikey)))`.
+  - These stay package-private under `lib/src/` (consistent with the iteration-2 crypto primitives); the public
+    barrel is unchanged. Tests port the Java `ScidGeneratorTest` / `EntryHashGeneratorTest` /
+    `PreRotationHashGeneratorTest`, plus vector-gated tests proving byte-exact SCID and entry-hash-chain
+    derivation against the vendored interop logs (`first-log-entry-good.jsonl`, `multi-entry-log.jsonl`).
+
+### Changed
+- `Jcs` — added `Jcs.canonicalizeValue(Object?)`, now the primary entry point: it canonicalizes an
+  already-decoded JSON value directly, dropping the encode→parse round-trip the port previously copied from Java's
+  `canonicalize(JsonObject)` overload. `Jcs.canonicalize(String)` is retained for text-only inputs (the SCID
+  `{SCID}` string-replace step) and decodes once before delegating. `EntryHashGenerator` and `ProofGenerator` now
+  canonicalize their maps directly. Output is byte-identical (a unit test asserts the two paths match, and all
+  interop-vector tests — entry-hash chain and every `eddsa-jcs-2022` proof — still pass). This is the first
+  application of the new "idiomatic Dart over Java's internal shape" priority recorded in
+  `docs/PORTING-DECISIONS.md` §8 and `docs/AGENTS.md`.
+- `docs/AGENTS.md` — added guiding principle "Idiomatic Dart first" and the priority order (interop vectors >
+  Dart best practices > matching Java's internal approach); summarized the `Jcs` value API.
 - `tool/verify.sh` — one-shot quality gate (`dart pub get` + workspace `dart analyze --fatal-infos` + `dart test`
   for every package with a `test/` dir), the Dart analog of the Java project's `./mvnw clean verify`. Pass
   `--coverage` to also emit `packages/didwebvh_core/coverage/lcov.info`. Established as the canonical

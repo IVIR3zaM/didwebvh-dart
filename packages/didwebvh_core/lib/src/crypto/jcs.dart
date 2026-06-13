@@ -22,6 +22,11 @@ class Jcs {
 
   /// Canonicalizes a JSON document supplied as a [json] string and returns the
   /// canonical UTF-8 bytes.
+  ///
+  /// Use this when the input only exists as text (e.g. the SCID step, which
+  /// string-replaces the `{SCID}` placeholder in the serialized entry). When
+  /// you already hold a decoded value, prefer [canonicalizeValue] — it skips
+  /// the parse.
   static Uint8List canonicalize(String json) {
     final Object? parsed;
     try {
@@ -29,8 +34,21 @@ class Jcs {
     } on FormatException catch (e) {
       throw ValidationException('JCS canonicalization failed: ${e.message}', e);
     }
+    return canonicalizeValue(parsed);
+  }
+
+  /// Canonicalizes an already-decoded JSON [value] (a `Map`, `List`, `String`,
+  /// `num`, `bool`, or `null`) and returns the canonical UTF-8 bytes.
+  ///
+  /// This is the primary entry point: did:webvh code paths build and mutate
+  /// decoded structures (maps), so canonicalizing the value directly is both
+  /// the idiomatic Dart shape and avoids the redundant encode/decode round-trip
+  /// that [canonicalize] would incur. (The Java reference only exposes a
+  /// string/`JsonObject` pair and re-parses internally; see
+  /// `docs/PORTING-DECISIONS.md` §8.)
+  static Uint8List canonicalizeValue(Object? value) {
     final out = StringBuffer();
-    _serialize(parsed, out);
+    _serialize(value, out);
     return Uint8List.fromList(utf8.encode(out.toString()));
   }
 
