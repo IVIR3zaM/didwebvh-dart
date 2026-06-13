@@ -4,3 +4,5 @@
 /// This barrel re-exports the public API; everything under `lib/src/` is
 /// package-private. Exports are added as the implementation lands.
 library;
+
+export 'src/local_key_signer.dart';

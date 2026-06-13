@@ -215,8 +215,22 @@ All notable changes to this project are documented here. The format is based on
   - Reuses the existing `didweb/implicit_services.dart` (`ImplicitServices`, landed in iteration 9 as a minimal
     dependency); the barrel now re-exports both `DidWebPublisher` and `ImplicitServices`. Tests port the Java
     `DidWebPublisherTest` (12 cases) one-for-one.
+- Iteration 12 — `didwebvh_signing_local` package: local in-memory Ed25519 `Signer`, ported from the Java
+  `didwebvh-signing-local` module (`LocalKeySigner`):
+  - `lib/src/local_key_signer.dart` (`LocalKeySigner`) — implements the async core `Signer` over
+    `package:cryptography` `Ed25519`. `generate()` and `fromPrivateKey(seed)` are async factories (the public key
+    is derived asynchronously by `cryptography` — a direct consequence of the documented async `Signer` delta);
+    `LocalKeySigner.fromJson(json)` is a synchronous factory constructor since the public key is already present
+    in the JWK. JWK in/out (`{"kty":"OKP","crv":"Ed25519","x":...,"d":...}`, base64url without padding) mirrors
+    Java's Gson form; `keyType`/`verificationMethod`/`publicKeyMultikey` reuse the core `MultikeyUtil`. Signing
+    failures are wrapped in `SigningException`, matching Java. Tests port the Java `LocalKeySignerTest` plus a full
+    create→sign→verify→resolve round-trip (the iteration's acceptance criterion). Excluded from the coverage gate
+    (thin adapter, per decisions §5).
 
 ### Changed
+- `didwebvh_core` barrel now re-exports `MultikeyUtil` (`src/crypto/multikey.dart`). It is public cross-module API
+  in Java (`didwebvh-signing-local` imports `core.crypto.MultikeyUtil`); exposing it lets `LocalKeySigner` and the
+  in-test signer use it without an `implementation_imports` violation.
 - Pinned `very_good_analysis` to `^7.0.0` (down from `^10.2.0`). VGA `8.0.0+` requires Dart `>=3.7.0`, which broke
   `dart pub get` on the CI `3.6.0` matrix leg and conflicted with the documented `^3.6.0` SDK floor (decisions §3).
   `^7.0.0` is the newest line that supports `3.6.0`, keeping the Affinidi-`ssi`-aligned floor intact. See

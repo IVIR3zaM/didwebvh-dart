@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:didwebvh_core/didwebvh_core.dart';
-import 'package:didwebvh_core/src/crypto/multikey.dart';
 
 /// An in-test [Signer] backed by a freshly generated Ed25519 key pair,
 /// mirroring the anonymous BouncyCastle-backed signer in the Java proof tests.

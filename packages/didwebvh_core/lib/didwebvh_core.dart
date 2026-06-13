@@ -11,6 +11,7 @@ export 'src/core/did_webvh_state.dart';
 export 'src/core/exceptions.dart';
 export 'src/create/create_did_config.dart';
 export 'src/create/create_did_result.dart';
+export 'src/crypto/multikey.dart';
 export 'src/didweb/did_web_publisher.dart';
 export 'src/didweb/implicit_services.dart';
 export 'src/model/data_integrity_proof.dart';

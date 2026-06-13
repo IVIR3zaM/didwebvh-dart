@@ -22,7 +22,7 @@ the shared test vectors are the cross-language contract. Status flow: `[ ]` not 
 | [x] | 9 | DID resolution | [iterations/09-resolve.md](iterations/09-resolve.md) |
 | [x] | 10 | Update, migration & deactivation | [iterations/10-update-migrate-deactivate.md](iterations/10-update-migrate-deactivate.md) |
 | [x] | 11 | Parallel did:web publishing | [iterations/11-didweb.md](iterations/11-didweb.md) |
-| [ ] | 12 | `didwebvh_signing_local` package | [iterations/12-signing-local.md](iterations/12-signing-local.md) |
+| [x] | 12 | `didwebvh_signing_local` package | [iterations/12-signing-local.md](iterations/12-signing-local.md) |
 | [ ] | 13 | Wizard CLI | [iterations/13-wizard.md](iterations/13-wizard.md) |
 | [ ] | 14 | Interop & quality finalization | [iterations/14-interop-quality.md](iterations/14-interop-quality.md) |
 
