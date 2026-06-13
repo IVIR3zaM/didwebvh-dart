@@ -8,6 +8,20 @@ All notable changes to this project are documented here. The format is based on
 > [`didwebvh-java`](https://github.com/decentralized-identity/didwebvh-java), built to behave identically and
 > verified against the same shared interop vectors, written with a Dart-idiomatic mindset.
 
+## [Unreleased]
+
+## [0.1.1] - 2026-06-13
+
+Packaging-only patch (no API or behaviour change), fixing pub.dev metadata:
+
+### Fixed
+- Restored the canonical Apache-2.0 `APPENDIX` block in `LICENSE` (and each package's copy) so pub.dev's license
+  detector recognizes it as `Apache-2.0`.
+- Trimmed the `didwebvh` package description to pub.dev's 60–180 character range.
+
+### Changed
+- Bumped all three packages to `0.1.1` and the inter-package constraints to `^0.1.1` (lockstep versioning).
+
 ## [0.1.0] - 2026-06-13
 
 First release — a complete, interop-verified Dart port of the three `didwebvh-java` modules across a pub
