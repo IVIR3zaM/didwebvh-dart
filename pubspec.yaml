@@ -12,4 +12,4 @@ workspace:
   - packages/didwebvh_wizard
 
 dev_dependencies:
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^7.0.0

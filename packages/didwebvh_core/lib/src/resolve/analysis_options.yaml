@@ -1,0 +1,11 @@
+# Inherit the package (→ workspace) rule set.
+include: ../../../analysis_options.yaml
+
+linter:
+  rules:
+    # ResolveOptions is a faithful port of Java's fluent `ResolveOptions.Builder`
+    # (mirroring CreateDidConfig): each setter returns `this` for chaining so the
+    # fluent/cascade/named-parameter styles are interchangeable. This guard
+    # fights the builder idiom; exempted here only, same narrow scoping as
+    # lib/src/create/.
+    avoid_returning_this: false

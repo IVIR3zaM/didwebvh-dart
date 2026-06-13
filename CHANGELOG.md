@@ -153,8 +153,42 @@ All notable changes to this project are documented here. The format is based on
     interop validator tests (`InteropJavaEeccLogsTest`, `InteropPreRotationConsumeTest`, `InteropTsBasicUpdateTest`,
     `InteropEmptyWitnessObjectTest`, `InteropRustWitnessProofsTest`, `InteropNegativeCrossDidWitnessReplayTest`)
     against the vendored vectors. The barrel re-exports the four `validate/` types and the two witness-proof types.
+- Iteration 9 — DID resolution, ported from the Java `resolve/` package (spec §3.2 resolution, §3.8/§3.9 implicit
+  services):
+  - `resolve/did_resolver.dart` (`DidResolver`) — high-level resolver for HTTP, file, and in-memory logs.
+    `resolve(did[, options])` parses the DID URL, merges query-string version selectors (`?versionId` /
+    `?versionTime` / `?versionNumber`) under explicit `options`, fetches `did.jsonl`, and (per `witnessFetchMode`)
+    fetches `did-witness.json` proactively or only when the log requires witnesses. `resolveFromFile(path)` and
+    `resolveFromLog(jsonl, did)` resolve without network access. Resolution is `async` (the documented ripple from
+    the async validators).
+  - `resolve/resolve_options.dart` (`ResolveOptions` + `WitnessFetchMode`) — version-selection holder mirroring
+    Java's fluent `ResolveOptions.Builder`. Like `CreateDidConfig`, it supports the three interchangeable call
+    styles (fluent chaining, cascade, named parameters) since it is public-API-facing, with `...Value` read
+    accessors, `withFallbacks`, and `hasMultipleVersionSelectors`.
+  - `resolve/remote_did_fetcher.dart` (`RemoteDidFetcher`), `resolve/http_did_fetcher.dart` (`HttpDidFetcher`,
+    on `package:http`, with the 10 s call timeout + 200 KB response cap mirroring Java/OkHttp; 404 → `notFound`,
+    other failures → `httpError`). The cap is enforced by **streaming** the body (`Client.send()` +
+    `StreamedResponse.stream`) and aborting once the running byte count exceeds the limit — the response is never
+    fully buffered, so a host that omits or lies about `Content-Length` cannot force unbounded memory use.
+    `resolve/file_did_fetcher.dart` (`FileDidFetcher`) does synchronous file reads.
+  - `resolve/log_processor.dart` (`LogProcessor`) — parses the JSONL log, runs log-chain validation, validates
+    witness proofs when the merged parameters require them (rejecting replayed proofs whose `versionId` is not in
+    the published log), selects the entry by versionId/versionNumber/versionTime (latest by default), and builds the
+    `ResolveResult` (DID Document + `ResolutionMetadata`); deactivated DIDs return metadata without a document.
+  - `didweb/implicit_services.dart` (`ImplicitServices.addTo`) — a minimal slice of the iteration-11 `didweb/`
+    package, ported now because resolution must inject the implicit `#files` and `#whois` services (spec §3.8/§3.9)
+    into the resolved document unless the controller already declared them. Kept package-private; the full
+    `didweb/` package (and `httpsBase`, the publisher) lands in iteration 11.
+  - Tests port the Java `FileDidFetcherTest`, `HttpDidFetcherTest` (using `package:http/testing.dart` `MockClient`
+    instead of OkHttp `MockWebServer`, per decisions §2), `LogProcessorTest`, and `DidResolverTest`, with a shared
+    `resolve_test_support.dart`. The barrel re-exports `DidResolver`, `HttpDidFetcher`, `ResolveOptions`, and
+    `WitnessFetchMode`.
 
 ### Changed
+- Pinned `very_good_analysis` to `^7.0.0` (down from `^10.2.0`). VGA `8.0.0+` requires Dart `>=3.7.0`, which broke
+  `dart pub get` on the CI `3.6.0` matrix leg and conflicted with the documented `^3.6.0` SDK floor (decisions §3).
+  `^7.0.0` is the newest line that supports `3.6.0`, keeping the Affinidi-`ssi`-aligned floor intact. See
+  `docs/PORTING-DECISIONS.md` §2 (lint row).
 - `Jcs` — added `Jcs.canonicalizeValue(Object?)`, now the primary entry point: it canonicalizes an
   already-decoded JSON value directly, dropping the encode→parse round-trip the port previously copied from Java's
   `canonicalize(JsonObject)` overload. `Jcs.canonicalize(String)` is retained for text-only inputs (the SCID

@@ -68,8 +68,8 @@ dart pub add didwebvh_core didwebvh_signing_local
 > `update`, `migrate`, and `deactivate` — returns a builder whose optional settings can be supplied in **three
 > interchangeable styles**: fluent chaining, cascades (`..`), or named parameters at construction. They are
 > equivalent; pick whichever reads best. The examples below use the fluent form for brevity; the three forms are
-> shown side by side once under [Create a DID](#create-a-did). (`resolve` takes a plain DID string and a value-type
-> `ResolveOptions`, so it has no builder.)
+> shown side by side once under [Create a DID](#create-a-did). The version-selection holder `ResolveOptions`
+> follows the same three styles (it mirrors Java's `ResolveOptions.Builder`).
 
 ### Create a DID
 
@@ -122,7 +122,8 @@ final remote = await DidWebVh.resolve('did:webvh:QmSCID:example.com');
 final jsonl = await File('did.jsonl').readAsString();
 final offline = await DidResolver().resolveFromLog(jsonl, did);
 
-// Time-travel / version filtering:
+// Time-travel / version filtering (named-parameter form; the fluent and
+// cascade builder styles work too, e.g. `ResolveOptions()..versionNumber(3)`):
 final opts = ResolveOptions(versionNumber: 3);
 final older = await DidResolver().resolveFromLog(jsonl, did, opts);
 
