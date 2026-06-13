@@ -17,7 +17,7 @@ must behave **identically** to it. It is organized as a Dart **pub workspace** m
 3. [`PORTING-STATUS.md`](PORTING-STATUS.md) — tiny iteration index; pick the next one. Full detail per
    iteration is in [`iterations/`](iterations/) — read only the one you're working on.
 4. [`ARCHITECTURE.md`](ARCHITECTURE.md) — language-neutral design + spec algorithms (from the Java reference).
-5. [`../PROMPT.md`](../PROMPT.md) — the ready-to-paste prompt that runs the next iteration.
+5. [`PROMPT.md`](PROMPT.md) — the ready-to-paste prompt that runs the next iteration.
 
 The Java source lives, git-ignored, in `reference/didwebvh-java/` (see `../reference/README.md`). The spec TXT
 is at `docs/spec/Webvh v1.0.txt`.

@@ -1,35 +1,65 @@
 name: Publish to pub.dev
 
-# Tag-triggered automated publishing via pub.dev OIDC (no GPG keys to manage),
-# replacing the Java project's Maven Central + GPG release flow.
-# Requires each package to be registered as an automated-publishing source on
-# pub.dev with this repository + tag pattern. Use per-package tags, e.g.
-# `didwebvh_core-vX.Y.Z`.
+# A single "master" tag `vX.Y.Z` publishes all three packages in dependency
+# order (core -> signing_local -> wizard) via pub.dev OIDC trusted publishing
+# (no GPG keys, no stored secrets). All packages are versioned in lockstep and
+# share the tag; each package's pub.dev trusted-publisher config must use the
+# tag pattern `v{{version}}`. Prerelease tags (e.g. `v0.1.0-rc1`) work too.
+#
+# Each dependent job waits for its dependency's version to be live on pub.dev
+# before publishing, because the server validates that `^x.y.z` constraints
+# resolve against published versions.
 
 on:
   push:
     tags:
-      - 'didwebvh_core-v[0-9]+.[0-9]+.[0-9]+'
-      - 'didwebvh_signing_local-v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 jobs:
-  publish:
+  didwebvh_core:
     permissions:
       id-token: write # required for pub.dev OIDC authentication
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
-
+      - uses: dart-lang/setup-dart@v1
       - name: Resolve workspace dependencies
         run: dart pub get
-
-      - name: Select package from tag
-        id: pkg
-        run: echo "dir=packages/${GITHUB_REF_NAME%-v*}" >> "$GITHUB_OUTPUT"
-
-      - name: Publish
+      - name: Publish didwebvh_core
         run: dart pub publish --force
-        working-directory: ${{ steps.pkg.outputs.dir }}
+        working-directory: packages/didwebvh_core
+
+  didwebvh_signing_local:
+    needs: didwebvh_core
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+      - name: Wait for didwebvh_core on pub.dev
+        run: bash tool/wait-for-pub.sh didwebvh_core "${GITHUB_REF_NAME#v}"
+      - name: Resolve workspace dependencies
+        run: dart pub get
+      - name: Publish didwebvh_signing_local
+        run: dart pub publish --force
+        working-directory: packages/didwebvh_signing_local
+
+  didwebvh_wizard:
+    needs: didwebvh_signing_local
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+      - name: Wait for dependencies on pub.dev
+        run: |
+          bash tool/wait-for-pub.sh didwebvh_core "${GITHUB_REF_NAME#v}"
+          bash tool/wait-for-pub.sh didwebvh_signing_local "${GITHUB_REF_NAME#v}"
+      - name: Resolve workspace dependencies
+        run: dart pub get
+      - name: Publish didwebvh_wizard
+        run: dart pub publish --force
+        working-directory: packages/didwebvh_wizard

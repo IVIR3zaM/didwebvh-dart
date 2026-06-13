@@ -2,10 +2,18 @@ name: didwebvh_wizard
 description: >-
   Interactive CLI wizard for did:webvh (create / update / resolve / export
   did:web). A faithful Dart port of didwebvh-java's didwebvh-wizard module.
-  Thin adapter — not published, excluded from the coverage gate.
-version: 0.1.0
+version: 0.1.0-rc1
 repository: https://github.com/IVIR3zaM/didwebvh-dart
-publish_to: none
+issue_tracker: https://github.com/IVIR3zaM/didwebvh-dart/issues
+topics:
+  - did
+  - didwebvh
+  - ssi
+  - identity
+  - cryptography
+
+executables:
+  didwebvh_wizard:
 
 environment:
   sdk: '^3.6.0'
@@ -14,10 +22,8 @@ resolution: workspace
 
 dependencies:
   args: ^2.5.0
-  didwebvh_core:
-    path: ../didwebvh_core
-  didwebvh_signing_local:
-    path: ../didwebvh_signing_local
+  didwebvh_core: ^0.1.0-rc1
+  didwebvh_signing_local: ^0.1.0-rc1
   path: ^1.9.0
 
 dev_dependencies:

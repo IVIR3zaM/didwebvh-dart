@@ -24,14 +24,6 @@ the shared test vectors are the cross-language contract. Status flow: `[ ]` not 
 | [x] | 11 | Parallel did:web publishing | [iterations/11-didweb.md](iterations/11-didweb.md) |
 | [x] | 12 | `didwebvh_signing_local` package | [iterations/12-signing-local.md](iterations/12-signing-local.md) |
 | [x] | 13 | Wizard CLI | [iterations/13-wizard.md](iterations/13-wizard.md) |
-| [ ] | 14 | Interop & quality finalization | [iterations/14-interop-quality.md](iterations/14-interop-quality.md) |
+| [x] | 14 | Interop & quality finalization | [iterations/14-interop-quality.md](iterations/14-interop-quality.md) |
 
 Iterations are dependency-ordered: an iteration may only start when every earlier one it builds on is `[x]`.
-
-## Progress log
-
-One line per finished iteration (human fills in after committing).
-
-| Date | # | Commit | Java ref tag |
-|------|---|--------|--------------|
-|      |   |        |              |

@@ -1,10 +1,12 @@
 # did:webvh Test Vectors
 
 Each file in this directory is a canonical input for the spec-compliance
-integration tests in `SpecComplianceIT`. Files are produced by running the
-library's own `create`/`update`/`migrate`/`deactivate` operations with
-deterministic Ed25519 seeds (see `TestVectors` and `TestVectorGenerator`
-under `src/test/java/.../integration/`).
+tests in this package (e.g. `test/create/`, `test/vectors_test.dart`). The
+files are vendored byte-for-byte from the reference library
+[`didwebvh-java`](https://github.com/decentralized-identity/didwebvh-java),
+where they were produced by running the library's own
+`create`/`update`/`migrate`/`deactivate` operations with deterministic Ed25519
+seeds; they are the cross-implementation interop contract and are never edited.
 
 | File                              | What it exercises                                              |
 |-----------------------------------|----------------------------------------------------------------|
@@ -16,14 +18,11 @@ under `src/test/java/.../integration/`).
 | `migrated-did.jsonl`              | Portable create + migrate to `new.example.com`                 |
 | `pre-rotation-log.jsonl`          | Create with `nextKeyHashes`, then legitimate rotation          |
 
-## Regenerating
+## Refreshing
 
-```
-./mvnw -pl didwebvh-core test-compile
-java -cp "$(./mvnw -pl didwebvh-core -q dependency:build-classpath -Dmdep.outputFile=/dev/stdout):didwebvh-core/target/classes:didwebvh-core/target/test-classes" \
-    io.github.decentralizedidentity.didwebvh.core.integration.TestVectorGenerator
-```
-
-The seeds are fixed, but `versionTime` uses the wall clock — every
-regeneration will produce new SCIDs and entry hashes. Commit the refreshed
-files in the same change as the logic they reflect.
+These vectors are vendored, not generated here: regenerate them in the
+`didwebvh-java` reference, copy the refreshed files into this directory
+verbatim, then run the verification gate (`tool/verify.sh` from the repo root)
+and reconcile any deltas. The seeds are fixed, but `versionTime` uses the wall
+clock, so each regeneration produces new SCIDs and entry hashes — commit the
+refreshed files in the same change as the logic they reflect.

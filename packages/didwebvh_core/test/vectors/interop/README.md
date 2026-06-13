@@ -6,8 +6,8 @@ Upstream commit: `c11fda313dcc8ef0d1d50cff907fa754f33df73e` (2026-05-26)
 
 Each subdirectory tracks one interop regression discovered by the
 multi-implementation test suite (see GitHub issue #2). Files are copied
-verbatim from the upstream `vectors/` tree and exercised by JUnit tests under
-`didwebvh-core/src/test/java/.../interop/`.
+verbatim from the upstream `vectors/` tree and exercised by the interop tests
+under `test/interop/` in this package.
 
 | Directory | Source path in upstream | Exercises |
 | --- | --- | --- |
@@ -27,4 +27,5 @@ verbatim from the upstream `vectors/` tree and exercised by JUnit tests under
 
 To refresh: bump the SHA above, re-download the listed files
 (`curl -sSL https://raw.githubusercontent.com/swcurran/didwebvh-test-suite/<sha>/<path>`),
-run `./mvnw -pl didwebvh-core verify`, and reconcile any test deltas.
+run the verification gate (`tool/verify.sh` from the repo root), and reconcile
+any test deltas.

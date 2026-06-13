@@ -12,17 +12,9 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 A pure-Dart library for the [did:webvh](https://didwebvh.info/) (DID Web + Verifiable History) DID Method,
-v1.0 — a **faithful port** of the reference Java library
-[`didwebvh-java`](https://github.com/decentralized-identity/didwebvh-java), built to behave **identically**.
-
-> **Status: porting in progress.** This repository is being built iteratively by translating the Java
-> reference one slice at a time. See [`docs/PORTING-STATUS.md`](docs/PORTING-STATUS.md) for the plan
-> and current progress. The badges above go green as the workflows, repo, and pub.dev packages come online.
->
-> — alongside its sibling [`didwebvh-java`](https://github.com/decentralized-identity/didwebvh-java) — once it
-> is feature-complete and interop-verified. Until then it lives here; on donation the repository is transferred
-> to the `decentralized-identity` org (GitHub preserves redirects) and the CI/coverage badges and links above
-> are switched accordingly.
+v1.0. It is a faithful port of the reference Java library
+[`didwebvh-java`](https://github.com/decentralized-identity/didwebvh-java) — built to behave identically and
+verified against the same shared interop vectors — written with a Dart-idiomatic mindset.
 
 **Create**, **resolve**, **update**, **migrate**, **deactivate**, and **publish a parallel `did:web`**
 document for `did:webvh` DIDs, with pluggable key management (local keys, KMS/HSM, external signing APIs).
@@ -78,7 +70,7 @@ import 'dart:io';
 import 'package:didwebvh_core/didwebvh_core.dart';
 import 'package:didwebvh_signing_local/didwebvh_signing_local.dart';
 
-final signer = LocalKeySigner.generate();
+final signer = await LocalKeySigner.generate();
 
 final result = await DidWebVh.create('example.com', signer)
     .path('dids:alice')                     // optional URL path segment
@@ -169,7 +161,7 @@ await out.close();
 Publish a hash of the next authorization key; rotation must reveal that key or the DID becomes unrecoverable:
 
 ```dart
-final nextSigner = LocalKeySigner.generate();
+final nextSigner = await LocalKeySigner.generate();
 final nextHash = PreRotationHashGenerator.generateHash(nextSigner.publicKeyMultikey);
 
 await DidWebVh.create('example.com', signer)
@@ -260,8 +252,14 @@ Drop it into any `DidWebVh.create/update/migrate/deactivate` call — the librar
 
 ## Wizard CLI
 
-The wizard is **not published to pub.dev** — run it on demand from the package directory (no global
-install, nothing added to your `PATH`):
+Install the latest stable wizard from pub.dev and run it from anywhere:
+
+```bash
+dart pub global activate didwebvh_wizard
+didwebvh_wizard       # launches the interactive menu in the current directory
+```
+
+Or run it directly from a checkout of this repo (no global install):
 
 ```bash
 cd packages/didwebvh_wizard
@@ -278,15 +276,16 @@ The wizard supports:
 4. **Export** the parallel `did:web` document (`did.json`) for the current DID
 5. Exit
 
-Single-shot mode (skip the menu). Name the entrypoint explicitly so the flags reach the wizard instead of
-`dart run` itself:
+Single-shot mode (skip the menu):
 
 ```bash
+didwebvh_wizard --action export --dir /srv/dids/alice
+# from source, name the entrypoint so the flags reach the wizard:
 dart run bin/didwebvh_wizard.dart --action export --dir /srv/dids/alice
 ```
 
 Valid `--action` values: `create`, `update`, `resolve`, `export`. Use `--dir` to point at the directory holding
-`did.jsonl` (defaults to the current directory); `dart run bin/didwebvh_wizard.dart --help` lists every option.
+`did.jsonl` (defaults to the current directory); `--help` lists every option.
 
 ## Building & testing
 
@@ -298,8 +297,11 @@ dart test           # all tests incl. the shared interop vectors
 
 Contributing to the port: read [`docs/PORTING-GUIDE.md`](docs/PORTING-GUIDE.md) and
 [`docs/AGENTS.md`](docs/AGENTS.md), set up the git-ignored Java reference
-([`reference/README.md`](reference/README.md)), then run the next iteration with [`PROMPT.md`](PROMPT.md). Every
-commit requires a human review.
+([`reference/README.md`](reference/README.md)), then run the next iteration with
+[`docs/PROMPT.md`](docs/PROMPT.md). Every commit requires a human review.
+
+Releasing to pub.dev (including first-time account setup) is documented in
+[`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 
 ## Known deviations from the Java reference
 
