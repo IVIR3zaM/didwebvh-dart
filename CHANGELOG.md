@@ -112,6 +112,23 @@ All notable changes to this project are documented here. The format is based on
     the same `state` key ordering. A `lib/src/create/analysis_options.yaml` scopes `avoid_returning_this` /
     `avoid_positional_boolean_parameters` off for the fluent builder only (same narrow-scoping pattern as
     `lib/src/model/` and `lib/src/witness/`).
+- Iteration 7 — DID URL parsing & DID-to-HTTPS transformation (`packages/didwebvh_core/lib/src/url/`), ported
+  from the Java `url/` package (spec §3.4):
+  - `url/did_webvh_url.dart` (`DidWebVhUrl`) — parses `did:webvh:<SCID>:<domain>[:<path>...][?query][#fragment]`
+    into its components. Faithful port of the Java parse rules: fragment/query extraction, colon-split segments,
+    46-char base58btc SCID validation, domain/`%3A`-port decoding and 1–65535 range check, IP-address rejection
+    (bracketed IPv6 + all-digits-and-dots IPv4), and empty-path-segment (`::`) rejection. `decodedDomain` / `host`
+    / `port` getters and `toString()` / `toBaseDid()` round-trips mirror Java. `parse` is a factory constructor
+    (idiomatic Dart, same call site as Java's `static parse`).
+  - `url/did_to_https_transformer.dart` (`DidToHttpsTransformer`) — `toHttpsUrl` (`did.jsonl`), `toWitnessUrl`
+    (`did-witness.json`), and `toDidWebUrl`. `.well-known` is used when there is no path; path segments are
+    percent-encoded per RFC 3986 (unreserved passthrough, uppercase `%XX`). The host NFC + IDNA/Punycode step
+    mirrors Java's `Normalizer.normalize(NFC)` + `IDN.toASCII`: all-ASCII labels pass through unchanged (matching
+    RFC 3490 ToASCII), and non-ASCII labels are nameprepped (approximated as NFKC + lowercase) and Punycode-encoded
+    with the `xn--` ACE prefix.
+  - New dependencies `punycode` and `unorm_dart` (decisions §2 update) supply the IDNA/Punycode and Unicode-NFC
+    primitives Dart lacks in its core libraries. Tests port the Java `DidWebVhUrlTest` and
+    `DidToHttpsTransformerTest` one-for-one. The barrel re-exports `DidWebVhUrl` and `DidToHttpsTransformer`.
 
 ### Changed
 - `Jcs` — added `Jcs.canonicalizeValue(Object?)`, now the primary entry point: it canonicalizes an

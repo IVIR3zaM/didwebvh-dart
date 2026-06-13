@@ -21,5 +21,7 @@ export 'src/model/version_id.dart';
 export 'src/signing/proof_generator.dart';
 export 'src/signing/proof_verifier.dart';
 export 'src/signing/signer.dart';
+export 'src/url/did_to_https_transformer.dart';
+export 'src/url/did_webvh_url.dart';
 export 'src/witness/witness_config.dart';
 export 'src/witness/witness_entry.dart';

@@ -294,6 +294,22 @@ Contributing to the port: read [`docs/PORTING-GUIDE.md`](docs/PORTING-GUIDE.md) 
 ([`reference/README.md`](reference/README.md)), then run the next iteration with [`PROMPT.md`](PROMPT.md). Every
 commit requires a human review.
 
+## Known deviations from the Java reference
+
+This is a faithful port; the intentional deltas are documented in
+[`docs/PORTING-DECISIONS.md`](docs/PORTING-DECISIONS.md) (chiefly the async `Signer`). One behavioural caveat
+worth calling out:
+
+- **Internationalized domain names (IDN) are not fully RFC 3491 (Nameprep) compliant.** When transforming a
+  `did:webvh` DID to its HTTPS URL, the host is Unicode-normalized (NFC) and converted to ASCII via
+  IDNA/Punycode, mirroring Java's `Normalizer.normalize(NFC)` + `IDN.toASCII`. All-ASCII hosts (including
+  already-Punycoded `xn--` labels) pass through byte-for-byte identically to Java. **Non-ASCII** labels,
+  however, are nameprepped with an *approximation* — NFKC + lowercase — rather than the full RFC 3491 stringprep
+  mapping/prohibition tables that `java.net.IDN` applies. For such domains the produced `xn--` label may differ
+  from the Java output. No did:webvh test vector exercises a non-ASCII domain, and ASCII/`xn--` domains (the
+  common case) are unaffected. If you need exact RFC 3491 parity for raw Unicode domains, supply the host in its
+  already-ASCII (`xn--`) form.
+
 ## License
 
 [Apache License 2.0](LICENSE).

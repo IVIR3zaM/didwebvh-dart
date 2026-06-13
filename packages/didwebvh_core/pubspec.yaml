@@ -16,6 +16,8 @@ dependencies:
   crypto: ^3.0.0
   cryptography: ^2.7.0
   http: ^1.2.0
+  punycode: ^1.0.0
+  unorm_dart: ^0.3.2
 
 dev_dependencies:
   mocktail: ^1.0.0
