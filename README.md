@@ -40,8 +40,8 @@ document for `did:webvh` DIDs, with pluggable key management (local keys, KMS/HS
 ```yaml
 # pubspec.yaml
 dependencies:
-  didwebvh: ^0.1.0
-  didwebvh_signing_local: ^0.1.0   # only if you use the local-key signer
+  didwebvh: ^0.1.1
+  didwebvh_signing_local: ^0.1.1   # only if you use the local-key signer
 ```
 
 ```bash
