@@ -5,6 +5,8 @@ this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+## 0.1.2 - 2026-06-14
+
 - No functional changes; repo-level release tooling only (lockstep version bumping via `tool/bump-version.sh`).
 - Added regression tests ensuring a single-element `service.type` array (e.g. `["DIDCommMessaging"]`) survives
   SCID and entry-hash verification. Because the DID document `state` is kept as a verbatim map (never rebuilt from

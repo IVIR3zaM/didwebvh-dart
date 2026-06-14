@@ -3,7 +3,7 @@ description: >-
   Local in-memory Ed25519 Signer for did:webvh (async, JWK in/out) built on
   package:cryptography. A faithful Dart port of didwebvh-java's
   didwebvh-signing-local module.
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/IVIR3zaM/didwebvh-dart
 issue_tracker: https://github.com/IVIR3zaM/didwebvh-dart/issues
 topics:
@@ -20,7 +20,7 @@ resolution: workspace
 
 dependencies:
   cryptography: ^2.7.0
-  didwebvh: ^0.1.1
+  didwebvh: ^0.1.2
 
 dev_dependencies:
   test: ^1.25.0

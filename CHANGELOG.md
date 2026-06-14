@@ -10,6 +10,8 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-06-14
+
 ### Added
 - `tool/bump-version.sh`: an interactive, colorized version-bump wizard. Bumps all three packages in lockstep —
   `version:` fields, inter-package `^` constraints, the README install snippet, the generated `version.g.dart`, and

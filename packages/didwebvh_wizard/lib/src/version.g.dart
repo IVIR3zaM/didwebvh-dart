@@ -4,4 +4,4 @@
 // Source of truth is the `version:` field in pubspec.yaml.
 
 /// The published version of the didwebvh_wizard package.
-const String packageVersion = '0.1.1';
+const String packageVersion = '0.1.2';

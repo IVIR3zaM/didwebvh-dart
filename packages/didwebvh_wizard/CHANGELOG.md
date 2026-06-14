@@ -5,6 +5,8 @@ this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+## 0.1.2 - 2026-06-14
+
 - `--version` now reports the package version from `pubspec.yaml` via a generated
   `lib/src/version.g.dart` (regenerate with `dart run tool/generate_version.dart`)
   instead of a hardcoded string, so it can no longer drift from the pubspec.

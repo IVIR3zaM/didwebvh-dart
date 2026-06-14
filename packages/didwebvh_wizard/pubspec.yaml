@@ -2,7 +2,7 @@ name: didwebvh_wizard
 description: >-
   Interactive CLI wizard for did:webvh (create / update / resolve / export
   did:web). A faithful Dart port of didwebvh-java's didwebvh-wizard module.
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/IVIR3zaM/didwebvh-dart
 issue_tracker: https://github.com/IVIR3zaM/didwebvh-dart/issues
 topics:
@@ -22,8 +22,8 @@ resolution: workspace
 
 dependencies:
   args: ^2.5.0
-  didwebvh: ^0.1.1
-  didwebvh_signing_local: ^0.1.1
+  didwebvh: ^0.1.2
+  didwebvh_signing_local: ^0.1.2
   path: ^1.9.0
 
 dev_dependencies:
