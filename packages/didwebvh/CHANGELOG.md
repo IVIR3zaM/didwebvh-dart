@@ -6,6 +6,10 @@ this project adheres to [Semantic Versioning](https://semver.org/).
 ## Unreleased
 
 - No functional changes; repo-level release tooling only (lockstep version bumping via `tool/bump-version.sh`).
+- Added regression tests ensuring a single-element `service.type` array (e.g. `["DIDCommMessaging"]`) survives
+  SCID and entry-hash verification. Because the DID document `state` is kept as a verbatim map (never rebuilt from
+  a typed model), this port was never affected by the array-collapse bug fixed upstream in
+  `affinidi/affinidi-ssi-dart#290`; the tests pin that behaviour for the future.
 
 ## 0.1.1 - 2026-06-13
 

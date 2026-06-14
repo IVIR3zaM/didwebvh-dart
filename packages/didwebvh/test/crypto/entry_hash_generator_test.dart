@@ -72,6 +72,40 @@ void main() {
       expect(EntryHashGenerator.verify(entry, predecessorId), isFalse);
     });
 
+    test('preserves single-element service.type array (affinidi-ssi-dart#290 '
+        'regression)', () {
+      // Some implementations (didwebvh-rs, Java EECC) publish a single-element
+      // service.type as an array: "type":["DIDCommMessaging"]. A resolver that
+      // rebuilds the entry from a *typed* DID-document model can collapse that
+      // array to the scalar "DIDCommMessaging", changing the JCS bytes and
+      // breaking entry-hash/SCID verification (affinidi/affinidi-ssi-dart#290).
+      //
+      // This library keeps the DID document `state` as a verbatim map, so
+      // hashing the parsed-then-reserialized entry must equal hashing the raw
+      // published bytes that the controller actually signed.
+      const published =
+          '{"versionId":"1-placeholder","versionTime":"2024-01-01T00:00:00Z",'
+          '"parameters":{},"state":{"id":"did:example:123",'
+          '"service":[{"id":"#dwn","type":["DIDCommMessaging"],'
+          '"serviceEndpoint":"https://example.com"}]}}';
+      const predecessor = 'some-scid';
+
+      // Hash the raw published bytes.
+      final fromSource = EntryHashGenerator.generate(published, predecessor);
+      // Hash via the resolver's path: parse -> typed model -> reserialize.
+      final reserialized = LogEntry.fromJsonLine(published).toJsonLine();
+      final fromModel = EntryHashGenerator.generate(reserialized, predecessor);
+
+      expect(
+        fromModel,
+        fromSource,
+        reason: 'single-element service.type array must survive the '
+            'parse/reserialize round-trip used during verification',
+      );
+      // Explicitly assert the array was not collapsed to a scalar string.
+      expect(reserialized, contains('"type":["DIDCommMessaging"]'));
+    });
+
     test('verifies the entry-hash chain of a vendored interop log', () {
       final lines = TestVectors.readVector(
         '${TestVectors.specRoot}/multi-entry-log.jsonl',

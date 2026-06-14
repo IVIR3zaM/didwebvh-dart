@@ -21,6 +21,10 @@ All notable changes to this project are documented here. The format is based on
   with the matching `CHANGELOG.md` section as its body (mirroring the didwebvh-java reference).
 - `didwebvh_wizard` now derives its `--version` string from `pubspec.yaml` via a generated
   `lib/src/version.g.dart` (regenerate with `dart run tool/generate_version.dart`) instead of a hardcoded literal.
+- Regression tests pinning that a single-element `service.type` array (e.g. `["DIDCommMessaging"]`) survives
+  SCID and entry-hash verification, guarding against the typed-model array-collapse bug fixed upstream in
+  [`affinidi/affinidi-ssi-dart#290`](https://github.com/affinidi/affinidi-ssi-dart/pull/290). This port already
+  keeps the DID document `state` as a verbatim map (so it was never affected); the tests lock that in.
 
 ### Changed
 - Documented and standardized the changelog conventions (in [`docs/AGENTS.md`](docs/AGENTS.md) and the README):

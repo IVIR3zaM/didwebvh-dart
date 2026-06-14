@@ -49,6 +49,37 @@ void main() {
       expect(ScidGenerator.verify(scid, entryWithScid), isTrue);
     });
 
+    test('verify round trip with single-element service.type array '
+        '(affinidi-ssi-dart#290 regression)', () {
+      // A DID document whose service.type is a single-element array. Resolvers
+      // that rebuild the entry from a typed DID-document model can collapse
+      // ["DIDCommMessaging"] to "DIDCommMessaging", breaking SCID verification
+      // (affinidi/affinidi-ssi-dart#290). This library keeps `state` verbatim,
+      // so the SCID derived over the array must still verify.
+      final placeholder = ScidGenerator.placeholder();
+      final preliminary = _buildPreliminaryEntry()
+        ..state = {
+          'id': 'did:webvh:$placeholder:example.com',
+          'service': [
+            {
+              'id': '#dwn',
+              'type': ['DIDCommMessaging'],
+              'serviceEndpoint': 'https://example.com',
+            },
+          ],
+        };
+      final scid = ScidGenerator.generate(preliminary);
+
+      final json = preliminary.toJsonLine().replaceAll(placeholder, scid);
+      // The reserialized entry must keep the array, not collapse it.
+      expect(json, contains('"type":["DIDCommMessaging"]'));
+
+      final entryWithScid = LogEntry.fromJsonLine(json)
+        ..proof = [DataIntegrityProof.defaults()..proofValue = 'zFakeProof'];
+
+      expect(ScidGenerator.verify(scid, entryWithScid), isTrue);
+    });
+
     test('verify rejects tampered entry', () {
       final preliminary = _buildPreliminaryEntry();
       final scid = ScidGenerator.generate(preliminary);
