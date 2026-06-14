@@ -120,7 +120,30 @@ services, HSMs.
 
 - **ci.yml:** on push to `main` and all PRs; SDK matrix (stable / declared minimum / beta); runs the same gate
   as `tool/verify.sh` (`dart analyze` + `dart test --coverage`) → Codecov.
-- **publish.yml:** tag-triggered, pub.dev automated publishing via GitHub Actions OIDC (no GPG).
+- **publish.yml:** tag-triggered, pub.dev automated publishing via GitHub Actions OIDC (no GPG). After all three
+  packages publish, a `github_release` job creates the GitHub Release, using the matching root-`CHANGELOG.md`
+  section (extracted by [`tool/changelog-extract.sh`](../tool/changelog-extract.sh)) as the release notes —
+  mirroring the didwebvh-java reference, which derives its release body from the changelog.
+
+## Versioning & Changelogs
+
+- **Lockstep versioning.** All three packages share one version and bump together; inter-package constraints use
+  `^<that version>`. Never bump one package alone.
+- **Bump with the wizard.** Run [`tool/bump-version.sh`](../tool/bump-version.sh) — an interactive tool that
+  updates every `pubspec.yaml` `version:`, the inter-package `^` constraints, the README install snippet, the
+  generated `version.g.dart`, and every CHANGELOG (promoting `Unreleased` → the new dated version and adding a
+  fresh empty `Unreleased`). It asks patch/minor/major or an explicit version, always confirms, and
+  double-confirms downgrades. Don't hand-edit versions across files.
+- **Two changelog styles, by design:**
+  - **Root `CHANGELOG.md`** follows [Keep a Changelog](https://keepachangelog.com/): `## [Unreleased]` and
+    `## [X.Y.Z] - DATE`, with `Added` / `Changed` / `Fixed` groupings. This is the project-level log and the
+    source of GitHub release notes.
+  - **Per-package `CHANGELOG.md`** uses the plain Dart-idiomatic style that `dart create` emits and pub.dev
+    expects: `## Unreleased` and `## X.Y.Z - DATE`, with a simple bullet list.
+  - pub.dev accepts either style; the split keeps each package's log conventional while the root stays a richer
+    Keep a Changelog. [`tool/changelog-extract.sh`](../tool/changelog-extract.sh) understands both.
+- **The wizard's version** is read from its `pubspec.yaml` via the generated `lib/src/version.g.dart` (regenerate
+  with `dart run tool/generate_version.dart`); `tool/verify.sh` fails if that file is stale.
 
 ## Commit & Review Workflow (hard rule)
 
@@ -128,8 +151,9 @@ After completing any change, the agent MUST:
 
 1. **Run the gate [`tool/verify.sh`](../tool/verify.sh)** and confirm `VERIFY OK` (report the real output if it
    fails). This is the mandatory end-of-change check that nothing is broken.
-2. **Update `CHANGELOG.md`** under `## [Unreleased]` (Added / Changed / Fixed), referencing the spec section
-   or the ported Java class for non-obvious behaviour.
+2. **Update the changelog(s)** — the root `CHANGELOG.md` under `## [Unreleased]` (Added / Changed / Fixed), and
+   any affected package's `CHANGELOG.md` under its plain `## Unreleased` bullet list — referencing the spec
+   section or the ported Java class for non-obvious behaviour. See **Versioning & Changelogs** above.
 3. **Propose** a [Conventional Commits](https://www.conventionalcommits.org/) message — and **stop**.
 
 **Nothing is committed without a human review, and the agent never commits on the human's behalf.** The agent

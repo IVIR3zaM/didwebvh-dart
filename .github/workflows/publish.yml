@@ -63,3 +63,37 @@ jobs:
       - name: Publish didwebvh_wizard
         run: dart pub publish --force
         working-directory: packages/didwebvh_wizard
+
+  # Create the GitHub Release once all packages are published, using the
+  # matching CHANGELOG section as the release notes (mirrors the didwebvh-java
+  # reference, which derives its release body from the changelog).
+  github_release:
+    needs: [ didwebvh, didwebvh_signing_local, didwebvh_wizard ]
+    permissions:
+      contents: write # required to create the GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build release notes from CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          bash tool/changelog-extract.sh "$VERSION" CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "No CHANGELOG section found for $VERSION; falling back to a stub." >&2
+            printf 'Release %s\n' "$GITHUB_REF_NAME" > release-notes.md
+          fi
+          echo "----- release notes -----"
+          cat release-notes.md
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Tags with a pre-release suffix (e.g. v0.1.0-rc1) are marked prerelease.
+          prerelease=""
+          case "$GITHUB_REF_NAME" in
+            *-*) prerelease="--prerelease" ;;
+          esac
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            $prerelease

@@ -303,6 +303,23 @@ Contributing to the port: read [`docs/PORTING-GUIDE.md`](docs/PORTING-GUIDE.md) 
 Releasing to pub.dev (including first-time account setup) is documented in
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 
+### Versioning & changelogs
+
+All three packages are versioned in lockstep. To cut a release, run the interactive wizard:
+
+```bash
+tool/bump-version.sh   # patch / minor / major or an explicit version
+```
+
+It updates every `pubspec.yaml`, the inter-package `^` constraints, the install snippet above, the wizard's
+generated `version.g.dart`, and all changelogs (promoting `Unreleased` → the new dated version), then prints the
+git tag command. Pushing the `vX.Y.Z` tag publishes to pub.dev and creates a GitHub Release whose notes come from
+the root `CHANGELOG.md` section for that version.
+
+Changelog conventions: the **root [`CHANGELOG.md`](CHANGELOG.md)** follows
+[Keep a Changelog](https://keepachangelog.com/) (`## [Unreleased]`, `## [X.Y.Z] - DATE`); each **package's
+`CHANGELOG.md`** uses the plain Dart-idiomatic style (`## Unreleased`, `## X.Y.Z - DATE`). pub.dev accepts both.
+
 ## Known deviations from the Java reference
 
 This is a faithful port; the intentional deltas are documented in

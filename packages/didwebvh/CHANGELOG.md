@@ -5,6 +5,8 @@ this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+- No functional changes; repo-level release tooling only (lockstep version bumping via `tool/bump-version.sh`).
+
 ## 0.1.1 - 2026-06-13
 
 - Packaging fixes (no API or behaviour change): restore the canonical

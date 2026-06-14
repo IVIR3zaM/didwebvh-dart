@@ -10,6 +10,25 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+- `tool/bump-version.sh`: an interactive, colorized version-bump wizard. Bumps all three packages in lockstep —
+  `version:` fields, inter-package `^` constraints, the README install snippet, the generated `version.g.dart`, and
+  every CHANGELOG (promoting each `Unreleased` section to the new dated version) — choosing patch/minor/major or an
+  explicit version, explaining what the jump means, always confirming, loudly double-confirming a downgrade, and
+  warning (with a continue/abort prompt) if any changelog's `Unreleased` section is empty.
+- `tool/changelog-extract.sh`: prints a single version's CHANGELOG section, used by CI for release notes.
+- CI: a `github_release` job in the publish workflow that, after all packages publish, creates the GitHub Release
+  with the matching `CHANGELOG.md` section as its body (mirroring the didwebvh-java reference).
+- `didwebvh_wizard` now derives its `--version` string from `pubspec.yaml` via a generated
+  `lib/src/version.g.dart` (regenerate with `dart run tool/generate_version.dart`) instead of a hardcoded literal.
+
+### Changed
+- Documented and standardized the changelog conventions (in [`docs/AGENTS.md`](docs/AGENTS.md) and the README):
+  the root `CHANGELOG.md` follows Keep a Changelog (`## [Unreleased]` / `## [X.Y.Z] - DATE`); per-package
+  changelogs use the plain Dart-idiomatic style (`## Unreleased` / `## X.Y.Z - DATE`).
+- `tool/verify.sh` now fails fast if `version.g.dart` is out of sync with the wizard's `pubspec.yaml`, and if the
+  README install snippet pins package versions that don't match their `pubspec.yaml`.
+
 ## [0.1.1] - 2026-06-13
 
 Packaging-only patch (no API or behaviour change), fixing pub.dev metadata:

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:didwebvh_wizard/didwebvh_wizard.dart';
+import 'package:didwebvh_wizard/src/version.g.dart';
 
 /// Executable entry point for the did:webvh wizard.
 ///
@@ -56,7 +57,7 @@ Future<void> main(List<String> arguments) async {
     return;
   }
   if (args.flag('version')) {
-    stdout.writeln('didwebvh-wizard 0.1.0');
+    stdout.writeln('didwebvh-wizard $packageVersion');
     return;
   }
 
