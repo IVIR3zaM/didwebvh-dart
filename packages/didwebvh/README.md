@@ -42,7 +42,7 @@ print(result.didDocument?.id);
 see [`example/`](example/didwebvh_example.dart) for an inline signer, or use
 `LocalKeySigner` from `didwebvh_signing_local` (or a KMS/HSM-backed `Signer`).
 
-See the [repository README](https://github.com/IVIR3zaM/didwebvh-dart) for the
+See the [repository README](https://github.com/decentralized-identity/didwebvh-dart) for the
 full guide (create, resolve, update, migrate, deactivate, witnesses,
 pre-rotation, parallel `did:web`).
 
