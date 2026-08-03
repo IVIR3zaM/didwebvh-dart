@@ -1,10 +1,10 @@
 # didwebvh-dart
 
-<!-- CI/codecov badges point at the repo's CURRENT home (IVIR3zaM). On donation to DIF, transfer
-     the repo and switch these to decentralized-identity/didwebvh-dart. Pub badges stay grey until
-     the first pub.dev publish (publish under the donation-ready publisher, not earlier). -->
-[![Dart CI](https://github.com/IVIR3zaM/didwebvh-dart/actions/workflows/ci.yml/badge.svg)](https://github.com/IVIR3zaM/didwebvh-dart/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/IVIR3zaM/didwebvh-dart/branch/main/graph/badge.svg)](https://codecov.io/gh/IVIR3zaM/didwebvh-dart)
+<!-- CI/codecov badges point at the repo's previous home (IVIR3zaM). With the donation to DIF and transfer of the
+     repo these were switched to decentralized-identity/didwebvh-dart. Pub badges stay grey until
+     the first pub.dev publish (publish under the donation-ready publisher, not earlier). Remove this note after the first publish -->
+[![Dart CI](https://github.com/decentralized-identity/didwebvh-dart/actions/workflows/ci.yml/badge.svg)](https://github.com/decentralized-identity/didwebvh-dart/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/decentralized-identity/didwebvh-dart/branch/main/graph/badge.svg)](https://codecov.io/gh/decentralized-identity/didwebvh-dart)
 [![pub package](https://img.shields.io/pub/v/didwebvh.svg)](https://pub.dev/packages/didwebvh)
 [![pub points](https://img.shields.io/pub/points/didwebvh)](https://pub.dev/packages/didwebvh/score)
 [![Dart](https://img.shields.io/badge/Dart-3.6%2B-blue)](https://dart.dev/)

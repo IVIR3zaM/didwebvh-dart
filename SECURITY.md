@@ -16,7 +16,7 @@ Until `1.0.0`, only the latest minor release line receives security fixes.
 Instead, report privately via one of:
 
 1. **GitHub private vulnerability reporting** —
-   [Report a vulnerability](https://github.com/IVIR3zaM/didwebvh-dart/security/advisories/new)
+   [Report a vulnerability](https://github.com/decentralized-identity/didwebvh-dart/security/advisories/new)
    (preferred).
 2. **Email** — `m.reza.maghool@gmail.com` with subject
    `[didwebvh-dart security]`. Encrypt sensitive contents with the

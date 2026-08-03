@@ -4,8 +4,8 @@ description: >-
   package:cryptography. A faithful Dart port of didwebvh-java's
   didwebvh-signing-local module.
 version: 0.1.2
-repository: https://github.com/IVIR3zaM/didwebvh-dart
-issue_tracker: https://github.com/IVIR3zaM/didwebvh-dart/issues
+repository: https://github.com/decentralized-identity/didwebvh-dart
+issue_tracker: https://github.com/decentralized-identity/didwebvh-dart/issues
 topics:
   - did
   - didwebvh

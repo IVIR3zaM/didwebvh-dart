@@ -82,7 +82,7 @@ The three packages are versioned **in lockstep** (one shared version number) and
 
 1. Open `https://pub.dev/packages/<package>/admin` (you must be an uploader/admin).
 2. Under **Automated publishing → Enable publishing from GitHub Actions**:
-   - **Repository:** `IVIR3zaM/didwebvh-dart`
+   - **Repository:** `decentralized-identity/didwebvh-dart`
    - **Tag pattern:** `v{{version}}` (the same value for all three packages). `{{version}}` expands to each
      package's own `pubspec.yaml` version — and since the three share a version, the master tag `vX.Y.Z` matches
      all of them.
